@@ -13,17 +13,13 @@ describe('invoice generation', () => {
   it('dry run counts without writing; the same key replays; a new key never duplicates', async () => {
     const t = await registerTenant();
     const f = await setupFees(t, 3);
-    const dry = await agent()
-      .post('/api/v1/invoices/generate')
-      .query({ dryRun: 'true' })
-      .set(f.h)
-      .send({
-        sessionId: f.session._id,
-        classId: f.cls._id,
-        periodLabel: '2026-03',
-        cycle: 'monthly',
-        dueDate: '2026-03-10',
-      });
+    const dry = await agent().post('/api/v1/invoices/generate').query({ dryRun: 'true' }).set(f.h).send({
+      sessionId: f.session._id,
+      classId: f.cls._id,
+      periodLabel: '2026-03',
+      cycle: 'monthly',
+      dueDate: '2026-03-10',
+    });
     expect(dry.body.data).toMatchObject({ dryRun: true, toCreate: 3, totalAmount: 300000 });
     expect((await agent().get('/api/v1/invoices').set(f.h)).body.meta.total).toBe(0);
 
@@ -38,43 +34,34 @@ describe('invoice generation', () => {
     expect(other.body.data.skipped).toBe(3);
     expect((await agent().get('/api/v1/invoices').set(f.h)).body.meta.total).toBe(3);
 
-    const noKey = await agent()
-      .post('/api/v1/invoices/generate')
-      .set(f.h)
-      .send({
-        sessionId: f.session._id,
-        classId: f.cls._id,
-        periodLabel: '2026-04',
-        cycle: 'monthly',
-        dueDate: '2026-04-10',
-      });
+    const noKey = await agent().post('/api/v1/invoices/generate').set(f.h).send({
+      sessionId: f.session._id,
+      classId: f.cls._id,
+      periodLabel: '2026-04',
+      cycle: 'monthly',
+      dueDate: '2026-04-10',
+    });
     expect(noKey.body.code).toBe('IDEMPOTENCY_KEY_REQUIRED');
   });
 
   it('applies percent and fixed adjustments, never below zero, and numbers invoices per year', async () => {
     const t = await registerTenant();
     const f = await setupFees(t, 2);
-    await agent()
-      .post('/api/v1/fee-adjustments')
-      .set(f.h)
-      .send({
-        studentId: f.students[0]._id,
-        sessionId: f.session._id,
-        feeHeadId: f.tuition._id,
-        type: 'percent',
-        value: 25,
-        reason: 'Sibling discount',
-      });
-    await agent()
-      .post('/api/v1/fee-adjustments')
-      .set(f.h)
-      .send({
-        studentId: f.students[1]._id,
-        sessionId: f.session._id,
-        type: 'fixed',
-        value: 99999999,
-        reason: 'Full waiver test',
-      });
+    await agent().post('/api/v1/fee-adjustments').set(f.h).send({
+      studentId: f.students[0]._id,
+      sessionId: f.session._id,
+      feeHeadId: f.tuition._id,
+      type: 'percent',
+      value: 25,
+      reason: 'Sibling discount',
+    });
+    await agent().post('/api/v1/fee-adjustments').set(f.h).send({
+      studentId: f.students[1]._id,
+      sessionId: f.session._id,
+      type: 'fixed',
+      value: 99999999,
+      reason: 'Full waiver test',
+    });
     const res = await generate(f.h, f, {}, 'key-adjust-000001');
     expect(res.body.data.created).toBe(1); // second student fully waived: nothing to charge
     expect(res.body.data.skippedDetails[0].reason).toMatch(/Nothing to charge/);

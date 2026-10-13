@@ -39,7 +39,7 @@ export const generate = (
   h: Record<string, string>,
   ctx: { session: any; cls: any },
   over: Record<string, unknown> = {},
-  key = randomUUID(),
+  key: string = randomUUID(),
 ) =>
   agent()
     .post('/api/v1/invoices/generate')
@@ -54,7 +54,7 @@ export const generate = (
       ...over,
     });
 
-export const pay = (h: Record<string, string>, body: Record<string, unknown>, key = randomUUID()) =>
+export const pay = (h: Record<string, string>, body: Record<string, unknown>, key: string = randomUUID()) =>
   agent()
     .post('/api/v1/payments')
     .set(h)

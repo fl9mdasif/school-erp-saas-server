@@ -122,7 +122,10 @@ const buildPlan = async (input: GenerateInput): Promise<Plan> => {
       amount: i.amount as number,
       discount: discountFor(adj, i.feeHeadId, i.amount, today),
     }));
-    const total = lines.reduce((s, l) => s + l.amount - l.discount, 0);
+    const total = lines.reduce(
+      (s: number, l: { amount: number; discount: number }) => s + l.amount - l.discount,
+      0,
+    );
     if (total <= 0) {
       plan.skipped.push({
         studentId: student.studentId,
@@ -137,7 +140,7 @@ const buildPlan = async (input: GenerateInput): Promise<Plan> => {
       lines,
       total,
       signature: lines
-        .map((l) => String(l.feeHeadId))
+        .map((l: { feeHeadId: Types.ObjectId }) => String(l.feeHeadId))
         .sort()
         .join('+'),
     });
@@ -169,7 +172,7 @@ const buildPlan = async (input: GenerateInput): Promise<Plan> => {
 
 const summarize = (plan: Plan) => ({
   toCreate: plan.planned.length,
-  totalAmount: plan.planned.reduce((s, p) => s + p.total, 0),
+  totalAmount: plan.planned.reduce((s: number, p: Planned) => s + p.total, 0),
   skipped: plan.skipped.length,
   skippedDetails: plan.skipped.slice(0, 200),
 });
@@ -245,7 +248,7 @@ export const generateInvoices = async (input: GenerateInput, idempotencyKey: str
       dryRun: false,
       batchId,
       created,
-      totalAmount: plan.planned.reduce((s, p) => s + p.total, 0),
+      totalAmount: plan.planned.reduce((s: number, p: Planned) => s + p.total, 0),
       skipped: plan.skipped.length,
       skippedDetails: plan.skipped.slice(0, 200),
     };

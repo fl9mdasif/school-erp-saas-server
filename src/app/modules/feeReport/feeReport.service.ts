@@ -101,7 +101,7 @@ export const collectionReport = async (from: string, to: string, groupBy: GroupB
     },
   ];
 
-  let rows: { key: string; label?: string; collected: number; payments: number }[] = [];
+  let rows: { key: string; label?: string; collected: number; payments: number }[];
 
   if (groupBy === 'day') {
     const r = await LedgerEntry.aggregate([

@@ -19,6 +19,8 @@ export function auditable(schema: Schema): void {
     schema.pre(op as any, function (this: any) {
       const userId = getContext()?.userId;
       if (!userId) return;
+      // Aggregation-pipeline updates cannot be mixed with $set; those callers set updatedBy themselves.
+      if (Array.isArray(this.getUpdate())) return;
       this.set({ updatedBy: userId });
     });
   }
