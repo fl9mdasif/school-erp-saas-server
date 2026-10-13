@@ -38,7 +38,7 @@ describe('students', () => {
           .send(
             newStudent(cls._id, sections[0]._id, {
               name: `Concurrent ${i}`,
-              guardians: [{ name: 'G', phone: `0171100010${i}`, relation: 'father' }],
+              guardians: [{ name: 'Guardian', phone: `0171100010${i}`, relation: 'father' }],
             }),
           ),
       ),
@@ -196,3 +196,4 @@ describe('students', () => {
     expect((await login(t.slug, s.studentId, lg.body.data.student.temporaryPassword)).status).toBe(401);
   });
 });
+
