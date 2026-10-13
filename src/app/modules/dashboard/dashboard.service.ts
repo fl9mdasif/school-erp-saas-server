@@ -40,11 +40,27 @@ const adminSummary = async () => {
 const teacherSummary = async (auth: Auth) => {
   const pairs = await teacherPairs(auth.userId);
   const sess = await currentSession().catch(() => null);
-  const sections = await Section.find({
-    $or: pairs.map((p) => (p.sectionId ? { _id: p.sectionId } : { classId: p.classId })),
-  })
-    .select('classId name isDefault')
-    .lean();
+  const found = pairs.length
+    ? await Section.find({
+        $or: pairs.map((p) => (p.sectionId ? { _id: p.sectionId } : { classId: p.classId })),
+      })
+        .select('classId name isDefault')
+        .lean()
+    : [];
+  // The hidden default section only matters once it actually holds students.
+  const used =
+    sess && found.length
+      ? new Set(
+          (
+            await Enrolment.find({
+              sessionId: sess._id,
+              sectionId: { $in: found.map((s) => s._id) },
+              status: 'active',
+            }).distinct('sectionId')
+          ).map(String),
+        )
+      : new Set<string>();
+  const sections = found.filter((s) => !s.isDefault || used.has(String(s._id)));
   const taken = await AttendanceSheet.find({
     date: todayLocal(),
     sectionId: { $in: sections.map((s) => s._id) },
