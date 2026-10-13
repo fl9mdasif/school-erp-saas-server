@@ -1,0 +1,38 @@
+{
+  "name": "school-management-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "seed:admin": "tsx src/scripts/seedSuperAdmin.ts",
+    "seed:plans": "tsx src/scripts/seedPlans.ts"
+  },
+  "dependencies": {
+    "argon2": "^0.45.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongo-sanitize": "^1.1.0",
+    "mongoose": "^9.11.2",
+    "multer": "^2.4.0",
+    "node-cron": "^4.6.0",
+    "pdfkit": "^0.20.2",
+    "pino": "^10.4.0",
+    "pino-http": "^11.0.0",
+    "zod": "^4.6.7"
+  }
+}
