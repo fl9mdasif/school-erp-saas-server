@@ -196,4 +196,3 @@ describe('students', () => {
     expect((await login(t.slug, s.studentId, lg.body.data.student.temporaryPassword)).status).toBe(401);
   });
 });
-
