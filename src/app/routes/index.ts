@@ -11,6 +11,7 @@ import { studentImportRoutes } from '../modules/studentImport/studentImport.rout
 import { promotionRoutes } from '../modules/promotion/promotion.route';
 import { meRoutes, studentRoutes } from '../modules/student/student.route';
 import { attendanceRoutes } from '../modules/attendance/attendance.route';
+import { noticeRoutes } from '../modules/notice/notice.route';
 import { userRoutes } from '../modules/user/user.route';
 import { platformAuthRoutes } from '../modules/platform/platform.auth.route';
 import { platformRoutes } from '../modules/platform/platform.route';
@@ -35,3 +36,4 @@ apiRouter.use('/students/promote', promotionRoutes);
 apiRouter.use('/students', studentRoutes);
 apiRouter.use('/me', meRoutes);
 apiRouter.use('/attendance', attendanceRoutes);
+apiRouter.use('/notices', noticeRoutes);
