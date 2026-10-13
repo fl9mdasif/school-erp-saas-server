@@ -1,0 +1,14 @@
+﻿# Replace api.example.com with the real API host. Caddy gets and renews the HTTPS certificate on its own.
+# Start with: docker compose --profile proxy up -d
+api.example.com {
+	encode zstd gzip
+	reverse_proxy api:5000
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+	log {
+		output stdout
+		format json
+	}
+}
