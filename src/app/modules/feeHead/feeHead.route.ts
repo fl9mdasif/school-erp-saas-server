@@ -1,6 +1,7 @@
 ﻿import { z } from 'zod';
 import { crudRouter } from '../../lib/crud';
 import { FeeHead } from './feeHead.model';
+import { ROLE } from '../../lib/roles';
 
 const createBody = z.strictObject({
   name: z.string().trim().min(2).max(80),
@@ -19,8 +20,8 @@ export const feeHeadRoutes = crudRouter({
   model: FeeHead,
   createBody,
   updateBody: createBody.omit({ code: true }).partial(),
-  readRoles: ['admin', 'accountant'],
-  writeRoles: ['admin', 'accountant'],
+  readRoles: [ROLE.ADMIN, ROLE.ACCOUNTANT],
+  writeRoles: [ROLE.ADMIN, ROLE.ACCOUNTANT],
   allowDelete: false, // heads referenced by old invoices are deactivated, never removed
   sort: { code: 1 },
 });

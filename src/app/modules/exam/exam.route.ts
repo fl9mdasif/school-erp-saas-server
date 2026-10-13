@@ -8,13 +8,14 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import * as marks from '../marks/marks.service';
 import * as svc from './exam.service';
 import * as v from './exam.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
 router.use(authenticate());
 
 const id = (req: any) => req.params.id as string;
-const admin = roleGuard('admin');
-const staff = roleGuard('admin', 'teacher');
+const admin = roleGuard(ROLE.ADMIN);
+const staff = roleGuard(ROLE.ADMIN, ROLE.TEACHER);
 
 router.get(
   '/',

@@ -9,6 +9,7 @@ import { componentBody, uniqueKeys } from '../subject/subject.route';
 import { Subject } from '../subject/subject.model';
 import { User } from '../user/user.model';
 import { ClassSubject } from './classSubject.model';
+import { ROLE } from '../../lib/roles';
 
 const createBody = z.strictObject({
   sessionId: objectIdSchema,
@@ -29,7 +30,7 @@ export const classSubjectRoutes = crudRouter({
   model: ClassSubject,
   createBody,
   updateBody,
-  readRoles: ['admin', 'teacher'],
+  readRoles: [ROLE.ADMIN, ROLE.TEACHER],
   filterShape: {
     sessionId: objectIdSchema.optional(),
     classId: objectIdSchema.optional(),

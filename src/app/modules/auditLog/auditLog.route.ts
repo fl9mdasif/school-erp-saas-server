@@ -7,6 +7,7 @@ import { ok } from '../../lib/sendResponse';
 import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { AuditLog } from './auditLog.model';
+import { ROLE } from '../../lib/roles';
 
 const query = z.strictObject({
   ...paginationQuery,
@@ -19,7 +20,7 @@ const query = z.strictObject({
 });
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN));
 
 router.get(
   '/',

@@ -5,9 +5,10 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { commitPromotion, previewPromotion } from './promotion.service';
 import { promoteBody, promoteQuery } from './promotion.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN));
 
 router.post(
   '/',

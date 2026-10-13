@@ -3,9 +3,10 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import * as c from './user.controller';
 import * as v from './user.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN));
 
 router.get('/', validateRequest({ query: v.listUsersQuery }), c.list);
 router.post('/', validateRequest({ body: v.createUserBody }), c.create);

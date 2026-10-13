@@ -5,9 +5,10 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import * as svc from './publicSite.service';
 import { updateSiteBody } from './publicSite.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN));
 
 router.get(
   '/',

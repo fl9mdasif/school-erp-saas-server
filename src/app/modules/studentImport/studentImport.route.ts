@@ -8,11 +8,12 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { z } from 'zod';
 import * as svc from './studentImport.service';
+import { ROLE } from '../../lib/roles';
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024, files: 1 } });
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN));
 
 router.get('/template', (_req, res) => {
   res.setHeader('content-type', 'text/csv; charset=utf-8');

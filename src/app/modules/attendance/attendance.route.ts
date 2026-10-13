@@ -7,11 +7,12 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import * as svc from './attendance.service';
 import * as v from './attendance.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
 router.use(authenticate());
 
-const staff = roleGuard('admin', 'teacher');
+const staff = roleGuard(ROLE.ADMIN, ROLE.TEACHER);
 
 router.get(
   '/sheet',
@@ -45,7 +46,7 @@ router.patch(
 
 router.get(
   '/report/section',
-  roleGuard('admin', 'teacher', 'accountant'),
+  roleGuard(ROLE.ADMIN, ROLE.TEACHER, ROLE.ACCOUNTANT),
   validateRequest({ query: v.sectionReportQuery }),
   catchAsync(async (req, res) => {
     const q = req.query as any;
@@ -55,7 +56,7 @@ router.get(
 
 router.get(
   '/report/student/:studentId',
-  roleGuard('admin', 'teacher', 'accountant', 'student', 'guardian'),
+  roleGuard(ROLE.ADMIN, ROLE.TEACHER, ROLE.ACCOUNTANT, ROLE.STUDENT, ROLE.GUARDIAN),
   validateRequest({ params: v.studentParams, query: v.studentReportQuery }),
   catchAsync(async (req, res) => {
     const q = req.query as any;

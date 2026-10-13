@@ -5,9 +5,10 @@ import { requireAuth } from '../../lib/requireAuth';
 import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { buildReceipt, renderReceiptHtml, renderReceiptPdf } from './receipt.service';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin', 'accountant', 'student', 'guardian'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT, ROLE.STUDENT, ROLE.GUARDIAN));
 
 router.get(
   '/:id/receipt.pdf',

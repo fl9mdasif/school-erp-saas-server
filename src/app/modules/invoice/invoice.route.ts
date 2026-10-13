@@ -11,11 +11,12 @@ import { voidInvoice } from '../payment/payment.service';
 import { generateInvoices, previewInvoices } from './invoice.generate';
 import * as svc from './invoice.service';
 import * as v from './invoice.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
 router.use(authenticate());
 
-const staff = roleGuard('admin', 'accountant');
+const staff = roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT);
 
 router.post(
   '/generate',
@@ -36,7 +37,7 @@ router.post(
 
 router.get(
   '/',
-  roleGuard('admin', 'accountant', 'student', 'guardian'),
+  roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT, ROLE.STUDENT, ROLE.GUARDIAN),
   validateRequest({ query: v.listInvoicesQuery }),
   catchAsync(async (req, res) => {
     const { page, limit, ...f } = req.query as any;
@@ -47,14 +48,14 @@ router.get(
 
 router.get(
   '/:id',
-  roleGuard('admin', 'accountant', 'student', 'guardian'),
+  roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT, ROLE.STUDENT, ROLE.GUARDIAN),
   validateRequest({ params: idParams }),
   catchAsync(async (req, res) => ok(res, await svc.getInvoice(requireAuth(req), req.params.id as string))),
 );
 
 router.post(
   '/:id/void',
-  roleGuard('admin'),
+  roleGuard(ROLE.ADMIN),
   validateRequest({ params: idParams, body: v.voidBody }),
   catchAsync(async (req, res) => ok(res, await voidInvoice(req.params.id as string, req.body.reason))),
 );

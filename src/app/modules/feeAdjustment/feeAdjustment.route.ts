@@ -14,6 +14,7 @@ import { AcademicSession } from '../academicSession/academicSession.model';
 import { FeeHead } from '../feeHead/feeHead.model';
 import { Student } from '../student/student.model';
 import { FeeAdjustment } from './feeAdjustment.model';
+import { ROLE } from '../../lib/roles';
 
 const date = z.string().refine(isValidLocalDate, 'Use YYYY-MM-DD');
 const body = z
@@ -37,7 +38,7 @@ const body = z
   });
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN));
 
 router.get(
   '/',

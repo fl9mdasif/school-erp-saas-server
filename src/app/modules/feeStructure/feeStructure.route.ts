@@ -6,6 +6,7 @@ import { AcademicSession } from '../academicSession/academicSession.model';
 import { ClassModel } from '../class/class.model';
 import { FeeHead } from '../feeHead/feeHead.model';
 import { FeeStructure } from './feeStructure.model';
+import { ROLE } from '../../lib/roles';
 
 const item = z.strictObject({
   feeHeadId: objectIdSchema,
@@ -26,8 +27,8 @@ export const feeStructureRoutes = crudRouter({
   model: FeeStructure,
   createBody,
   updateBody: z.strictObject({ items: z.array(item).min(1).max(30) }),
-  readRoles: ['admin', 'accountant'],
-  writeRoles: ['admin', 'accountant'],
+  readRoles: [ROLE.ADMIN, ROLE.ACCOUNTANT],
+  writeRoles: [ROLE.ADMIN, ROLE.ACCOUNTANT],
   allowDelete: false,
   filterShape: { sessionId: objectIdSchema.optional(), classId: objectIdSchema.optional() },
   buildFilter: (q) => ({

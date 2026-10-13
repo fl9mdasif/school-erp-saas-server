@@ -12,6 +12,7 @@ import { linkedStudentIds } from '../student/student.access';
 import { Payment } from '../payment/payment.model';
 import { Student } from '../student/student.model';
 import { LedgerEntry } from './ledgerEntry.model';
+import { ROLE } from '../../lib/roles';
 
 /** Chronological ledger with a running balance: debit raises what is owed, credit lowers it. */
 export const studentLedger = async (studentId: string) => {
@@ -39,7 +40,7 @@ router.use(authenticate());
 
 router.get(
   '/:id/ledger',
-  roleGuard('admin', 'accountant', 'student', 'guardian'),
+  roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT, ROLE.STUDENT, ROLE.GUARDIAN),
   validateRequest({ params: idParams }),
   catchAsync(async (req, res) => {
     const student = await Student.findById(req.params.id).select('_id').lean();
@@ -53,7 +54,7 @@ export const ledgerRoutes = router;
 
 /** GET /me/fees: dues and recent receipts for the linked students. */
 const me = Router();
-me.use(authenticate(), roleGuard('student', 'guardian'));
+me.use(authenticate(), roleGuard(ROLE.STUDENT, ROLE.GUARDIAN));
 me.get(
   '/fees',
   catchAsync(async (req, res) => {

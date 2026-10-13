@@ -11,6 +11,7 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { writeAudit } from '../auditLog/auditLog.model';
 import { AcademicSession } from './academicSession.model';
+import { ROLE } from '../../lib/roles';
 
 const date = z.string().refine(isValidLocalDate, 'Use YYYY-MM-DD');
 const createBody = z
@@ -46,7 +47,7 @@ router.get(
 
 router.post(
   '/',
-  roleGuard('admin'),
+  roleGuard(ROLE.ADMIN),
   validateRequest({ body: createBody }),
   catchAsync(async (req, res) => {
     const doc = await withTransaction(async (session) => {
@@ -67,7 +68,7 @@ router.post(
 
 router.patch(
   '/:id',
-  roleGuard('admin'),
+  roleGuard(ROLE.ADMIN),
   validateRequest({ params: idParams, body: updateBody }),
   catchAsync(async (req, res) => {
     const doc = await withTransaction(async (session) => {

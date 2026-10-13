@@ -4,6 +4,7 @@ import { crudRouter } from '../../lib/crud';
 import { assertNotInUse } from '../../lib/inUse';
 import { Exam } from '../exam/exam.model';
 import { GradingScale } from './gradingScale.model';
+import { ROLE } from '../../lib/roles';
 
 const band = z
   .strictObject({
@@ -59,7 +60,7 @@ export const gradingScaleRoutes = crudRouter({
   model: GradingScale,
   createBody,
   updateBody: createBody.partial(),
-  readRoles: ['admin', 'teacher'],
+  readRoles: [ROLE.ADMIN, ROLE.TEACHER],
   prepare: async (body, existing) => {
     if (body.bands) assertBandsCover(body.bands);
     // exactly one default scale per tenant

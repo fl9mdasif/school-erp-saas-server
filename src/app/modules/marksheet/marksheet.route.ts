@@ -9,6 +9,7 @@ import { examStudentParams, meResultParams } from '../result/result.validation';
 import { getPublishedResultFor } from '../result/result.service';
 import { scopeFor, teacherEnrolmentFilter } from '../student/student.access';
 import { buildMarksheet, renderMarksheetPdf } from './marksheet.service';
+import { ROLE } from '../../lib/roles';
 
 const send = async (res: any, result: any) => {
   const pdf = await renderMarksheetPdf(await buildMarksheet(result));
@@ -20,7 +21,7 @@ const send = async (res: any, result: any) => {
 
 /** Staff: /exams/:id/results/:studentId/marksheet.pdf */
 const staffRouter = Router();
-staffRouter.use(authenticate(), roleGuard('admin', 'teacher'));
+staffRouter.use(authenticate(), roleGuard(ROLE.ADMIN, ROLE.TEACHER));
 staffRouter.get(
   '/:id/results/:studentId/marksheet.pdf',
   validateRequest({ params: examStudentParams }),
@@ -38,7 +39,7 @@ export const marksheetStaffRoutes = staffRouter;
 
 /** Student and guardian: /me/results/:examId/:studentId/marksheet.pdf, published results of linked students only. */
 const me = Router();
-me.use(authenticate(), roleGuard('student', 'guardian'));
+me.use(authenticate(), roleGuard(ROLE.STUDENT, ROLE.GUARDIAN));
 me.get(
   '/results/:examId/:studentId/marksheet.pdf',
   validateRequest({ params: meResultParams }),

@@ -6,9 +6,10 @@ import { ok } from '../../lib/sendResponse';
 import { getUploadProvider } from '../../lib/uploadProvider';
 import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin', 'teacher'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN, ROLE.TEACHER));
 
 const body = z.strictObject({
   kind: z.enum(['image', 'pdf']),

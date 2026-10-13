@@ -5,16 +5,17 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import { guardianInput } from './student.validation';
 import * as c from './student.controller';
 import * as v from './student.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
 router.use(authenticate());
 
-const readers = roleGuard('admin', 'accountant', 'teacher', 'student', 'guardian');
-const admin = roleGuard('admin');
+const readers = roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT, ROLE.TEACHER, ROLE.STUDENT, ROLE.GUARDIAN);
+const admin = roleGuard(ROLE.ADMIN);
 
 router.get(
   '/',
-  roleGuard('admin', 'accountant', 'teacher'),
+  roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT, ROLE.TEACHER),
   validateRequest({ query: v.listStudentsQuery }),
   c.list,
 );
@@ -52,5 +53,5 @@ export const studentRoutes = router;
 /** Student and guardian self-service. */
 const me = Router();
 me.use(authenticate());
-me.get('/students', roleGuard('student', 'guardian'), c.mine);
+me.get('/students', roleGuard(ROLE.STUDENT, ROLE.GUARDIAN), c.mine);
 export const meRoutes = me;

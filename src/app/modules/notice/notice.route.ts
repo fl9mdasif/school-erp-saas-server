@@ -8,6 +8,7 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import * as svc from './notice.service';
 import * as v from './notice.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
 router.use(authenticate());
@@ -27,7 +28,7 @@ router.get(
   catchAsync(async (req, res) => ok(res, await svc.getNotice(requireAuth(req), req.params.id as string))),
 );
 
-const writers = roleGuard('admin', 'teacher');
+const writers = roleGuard(ROLE.ADMIN, ROLE.TEACHER);
 router.post(
   '/',
   writers,

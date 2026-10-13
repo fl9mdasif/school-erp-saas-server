@@ -9,10 +9,11 @@ import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import * as svc from './payment.service';
 import * as v from './payment.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
 router.use(authenticate());
-const staff = roleGuard('admin', 'accountant');
+const staff = roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT);
 
 router.post(
   '/',
@@ -45,14 +46,14 @@ router.get(
 
 router.get(
   '/:id',
-  roleGuard('admin', 'accountant', 'student', 'guardian'),
+  roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT, ROLE.STUDENT, ROLE.GUARDIAN),
   validateRequest({ params: idParams }),
   catchAsync(async (req, res) => ok(res, await svc.getPayment(requireAuth(req), req.params.id as string))),
 );
 
 router.post(
   '/:id/reverse',
-  roleGuard('admin'),
+  roleGuard(ROLE.ADMIN),
   validateRequest({ params: idParams, body: v.reverseBody }),
   catchAsync(async (req, res) =>
     ok(res, await svc.reversePayment(requireAuth(req), req.params.id as string, req.body.reason)),

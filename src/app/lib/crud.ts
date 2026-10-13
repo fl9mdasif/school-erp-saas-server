@@ -10,6 +10,7 @@ import { buildMeta, paginationQuery, toSkip } from './pagination';
 import { created, ok } from './sendResponse';
 import type { Role } from './tenantContext';
 import { z as zod } from 'zod';
+import { ROLE } from './roles';
 
 export interface CrudOptions {
   /** Entity label used in messages and audit actions, e.g. 'class'. */
@@ -33,13 +34,13 @@ export interface CrudOptions {
   populate?: string;
 }
 
-const ALL: Role[] = ['admin', 'teacher', 'accountant', 'student', 'guardian'];
+const ALL: Role[] = [ROLE.ADMIN, ROLE.TEACHER, ROLE.ACCOUNTANT, ROLE.STUDENT, ROLE.GUARDIAN];
 
 /** Standard tenant CRUD router: list, get, create, update, optional delete, audited. */
 export function crudRouter(o: CrudOptions): Router {
   const router = Router();
   const read = roleGuard(...(o.readRoles ?? ALL));
-  const write = roleGuard(...(o.writeRoles ?? ['admin']));
+  const write = roleGuard(...(o.writeRoles ?? [ROLE.ADMIN]));
   router.use(authenticate());
 
   const query = zod.strictObject({ ...paginationQuery, ...(o.filterShape ?? {}) });

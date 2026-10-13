@@ -9,11 +9,12 @@ import { calculateExam } from './result.calc';
 import { correctResult, publishExam } from './result.publish';
 import * as svc from './result.service';
 import * as v from './result.validation';
+import { ROLE } from '../../lib/roles';
 
 const router = Router();
 router.use(authenticate());
-const admin = roleGuard('admin');
-const staff = roleGuard('admin', 'teacher');
+const admin = roleGuard(ROLE.ADMIN);
+const staff = roleGuard(ROLE.ADMIN, ROLE.TEACHER);
 const id = (req: any) => req.params.id as string;
 
 router.post(
@@ -63,7 +64,7 @@ export const resultRoutes = router;
 
 /** Student and guardian views of published results. */
 const me = Router();
-me.use(authenticate(), roleGuard('student', 'guardian'));
+me.use(authenticate(), roleGuard(ROLE.STUDENT, ROLE.GUARDIAN));
 me.get(
   '/results',
   catchAsync(async (req, res) => ok(res, await svc.myResults(requireAuth(req)))),
@@ -72,7 +73,7 @@ export const meResultRoutes = me;
 
 /** GET /students/:id/results for the admin's student profile. */
 const ofStudent = Router();
-ofStudent.use(authenticate(), roleGuard('admin'));
+ofStudent.use(authenticate(), roleGuard(ROLE.ADMIN));
 ofStudent.get(
   '/:id/results',
   validateRequest({ params: examParams }),

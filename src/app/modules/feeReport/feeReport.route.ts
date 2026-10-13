@@ -9,6 +9,7 @@ import { ok } from '../../lib/sendResponse';
 import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { collectionReport, duesReport } from './feeReport.service';
+import { ROLE } from '../../lib/roles';
 
 const date = z.string().refine(isValidLocalDate, 'Use YYYY-MM-DD');
 const duesQuery = z.strictObject({
@@ -30,7 +31,7 @@ const collectionQuery = z.strictObject({
 const tk = (p: number) => (p / 100).toFixed(2);
 
 const router = Router();
-router.use(authenticate(), roleGuard('admin', 'accountant'));
+router.use(authenticate(), roleGuard(ROLE.ADMIN, ROLE.ACCOUNTANT));
 
 router.get(
   '/dues',
