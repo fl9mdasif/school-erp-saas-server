@@ -63,7 +63,11 @@ describe('cross-tenant attacks (phase 1 routes)', () => {
     const a = await registerTenant();
     const b = await registerTenant();
     const jwt = await import('jsonwebtoken');
-    const payload = JSON.parse(Buffer.from(a.token.split('.')[1], 'base64url').toString());
+    const {
+      exp: _e,
+      iat: _i,
+      ...payload
+    } = JSON.parse(Buffer.from(a.token.split('.')[1], 'base64url').toString());
     const forged = jwt.sign({ ...payload, tid: b.tenantId }, 'wrong-secret-0123456789abcdef', {
       expiresIn: '5m',
     });

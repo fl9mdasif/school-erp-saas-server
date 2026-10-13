@@ -5,9 +5,10 @@ import { hashPassword } from '../../lib/password';
 import { generateTempPassword } from '../../lib/tempPassword';
 import { writeAudit } from '../auditLog/auditLog.model';
 import { revokeAllForUser } from '../auth/session.service';
+import type { UserRole } from './user.interface';
 import { User } from './user.model';
 
-const STAFF = ['admin', 'teacher', 'accountant'];
+const STAFF: UserRole[] = ['admin', 'teacher', 'accountant'];
 const PUBLIC_FIELDS = 'role name email phone status mustChangePassword lastLoginAt createdAt';
 
 const getStaff = async (id: string) => {
@@ -43,7 +44,7 @@ export const listUsers = async (page: PageParams, f: { role?: string; status?: s
 };
 
 export const createUser = async (input: {
-  role: string;
+  role: UserRole;
   name: string;
   email?: string;
   phone?: string;

@@ -7,7 +7,7 @@ const schema = createTenantSchema({
   fileName: String,
   totalRows: Number,
   validRows: Number,
-  errors: [{ row: Number, field: String, message: String, _id: false }],
+  rowErrors: [{ row: Number, field: String, message: String, _id: false }],
   rows: { type: [mongoose.Schema.Types.Mixed], select: false },
   committedAt: Date,
   result: { created: Number, guardiansReused: Number },

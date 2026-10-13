@@ -1,7 +1,7 @@
 ﻿import { Types } from 'mongoose';
 import { AppError } from '../../errors/AppError';
 import { escapeRegex, toSkip, type PageParams } from '../../lib/pagination';
-import { runAsTenant } from '../../lib/tenantContext';
+import { runAsTenant, runUnscoped } from '../../lib/tenantContext';
 import { writeAudit } from '../auditLog/auditLog.model';
 import { Plan } from '../plan/plan.model';
 import { checkSlug } from '../slug/slug.service';
@@ -187,7 +187,7 @@ export const createPlan = async (input: any) => {
 };
 
 export const updatePlan = async (id: string, input: any) => {
-  const plan = await Plan.findByIdAndUpdate(id, { $set: input }, { new: true });
+  const plan = await Plan.findByIdAndUpdate(id, { $set: input }, { returnDocument: 'after' });
   if (!plan) throw AppError.notFound('Plan not found');
   return plan;
 };
@@ -200,13 +200,13 @@ export const getStats = async () => {
       { $group: { _id: { $dateTrunc: { date: '$createdAt', unit: 'week' } }, count: { $sum: 1 } } },
       { $sort: { _id: 1 } },
     ]),
-    User.find({}).unscoped().countDocuments(),
+    runUnscoped(() => User.countDocuments({})),
   ]);
   const extra: Record<string, number> = {};
   for (const [k, fn] of Object.entries(usageCounters)) extra[k] = await fn();
   return {
-    tenantsByStatus: Object.fromEntries(byStatus.map((r) => [r._id, r.count])),
-    signupsPerWeek: signups.map((r) => ({ weekStart: r._id, count: r.count })),
+    tenantsByStatus: Object.fromEntries(byStatus.map((r: any) => [r._id, r.count])),
+    signupsPerWeek: signups.map((r: any) => ({ weekStart: r._id, count: r.count })),
     users: userTotal,
     ...extra,
   };

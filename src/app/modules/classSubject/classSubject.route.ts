@@ -51,7 +51,7 @@ export const classSubjectRoutes = crudRouter({
       if (!subject) throw AppError.badRequest('Subject not found');
       // Components default to the subject's own definition so marks entry has something to work with.
       if (!b.components)
-        b.components = subject.components.map((c: any) => ({
+        b.components = (subject as any).components.map((c: any) => ({
           key: c.key,
           label: c.label,
           fullMarks: c.fullMarks,

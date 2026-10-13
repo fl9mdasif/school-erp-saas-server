@@ -25,4 +25,3 @@ apiRouter.use('/sections', sectionRoutes);
 apiRouter.use('/subjects', subjectRoutes);
 
 apiRouter.use('/class-subjects', classSubjectRoutes);
-

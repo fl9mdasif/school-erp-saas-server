@@ -19,7 +19,7 @@ export const nextSeq = async (key: string, session?: ClientSession): Promise<num
       const doc = await Counter.findOneAndUpdate(
         { key },
         { $inc: { seq: 1 } },
-        { upsert: true, new: true, session, setDefaultsOnInsert: true },
+        { upsert: true, returnDocument: 'after', session, setDefaultsOnInsert: true },
       );
       return (doc as any).seq as number;
     } catch (err: any) {
