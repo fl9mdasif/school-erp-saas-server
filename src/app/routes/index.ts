@@ -6,6 +6,8 @@ import { classRoutes } from '../modules/class/class.route';
 import { sectionRoutes } from '../modules/section/section.route';
 import { subjectRoutes } from '../modules/subject/subject.route';
 import { classSubjectRoutes } from '../modules/classSubject/classSubject.route';
+import '../modules/student/student.hooks';
+import { meRoutes, studentRoutes } from '../modules/student/student.route';
 import { userRoutes } from '../modules/user/user.route';
 import { platformAuthRoutes } from '../modules/platform/platform.auth.route';
 import { platformRoutes } from '../modules/platform/platform.route';
@@ -25,3 +27,5 @@ apiRouter.use('/sections', sectionRoutes);
 apiRouter.use('/subjects', subjectRoutes);
 
 apiRouter.use('/class-subjects', classSubjectRoutes);
+apiRouter.use('/students', studentRoutes);
+apiRouter.use('/me', meRoutes);
