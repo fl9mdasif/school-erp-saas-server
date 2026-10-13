@@ -1,0 +1,76 @@
+﻿import { Router } from 'express';
+import { z } from 'zod';
+import { catchAsync } from '../../lib/catchAsync';
+import { buildMeta, paginationQuery } from '../../lib/pagination';
+import { normalizeBdPhone } from '../../lib/phone';
+import { ok } from '../../lib/sendResponse';
+import { inquiryLimiter, publicLimiter } from '../../middlewares/rateLimit';
+import { tenantResolver } from '../../middlewares/tenantResolver';
+import { validateRequest } from '../../middlewares/validateRequest';
+import * as svc from './publicApi.service';
+
+const router = Router();
+router.use(publicLimiter);
+
+const inquiryBody = z.strictObject({
+  name: z.string().trim().min(2).max(100),
+  phone: z.string().transform((v, ctx) => {
+    const n = normalizeBdPhone(v);
+    if (!n) ctx.addIssue({ code: 'custom', message: 'Enter a valid Bangladesh mobile number' });
+    return n ?? v;
+  }),
+  message: z.string().trim().max(1000).optional(),
+  classInterest: z.string().trim().max(60).optional(),
+  website: z.string().max(200).optional(), // honeypot
+});
+
+const cacheShort = (res: any) => res.setHeader('Cache-Control', 'public, max-age=60');
+
+// Platform level (no tenant)
+router.get(
+  '/platform/plans',
+  catchAsync(async (_req, res) => ok(res, await svc.publicPlans())),
+);
+router.get(
+  '/platform/find-school',
+  validateRequest({ query: z.strictObject({ q: z.string().trim().min(2).max(60) }) }),
+  catchAsync(async (req, res) => ok(res, await svc.findSchools((req.query as any).q))),
+);
+
+// Tenant level, resolved from the slug in the path
+const school = Router({ mergeParams: true });
+school.use(tenantResolver);
+school.get(
+  '/',
+  catchAsync(async (_req, res) => {
+    cacheShort(res);
+    ok(res, await svc.getSite());
+  }),
+);
+school.get(
+  '/notices',
+  validateRequest({ query: z.strictObject(paginationQuery) }),
+  catchAsync(async (req, res) => {
+    const { page, limit } = req.query as any;
+    const { rows, total } = await svc.listPublicNotices({ page, limit });
+    cacheShort(res);
+    ok(res, rows, buildMeta({ page, limit }, total));
+  }),
+);
+school.get(
+  '/staff',
+  catchAsync(async (_req, res) => {
+    cacheShort(res);
+    ok(res, await svc.listPublicStaff());
+  }),
+);
+school.post(
+  '/inquiries',
+  inquiryLimiter,
+  validateRequest({ body: inquiryBody }),
+  catchAsync(async (req, res) => ok(res, await svc.submitInquiry(req.body), undefined, 201)),
+);
+router.use('/schools/:slug', school);
+
+export const publicRoutes = router;
+export { school as publicSchoolRouter };

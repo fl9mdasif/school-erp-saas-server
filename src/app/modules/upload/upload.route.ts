@@ -28,13 +28,11 @@ router.post(
       return;
     }
     if (kind === 'pdf' && folder !== 'notices') {
-      res
-        .status(400)
-        .json({
-          success: false,
-          code: 'VALIDATION_ERROR',
-          message: 'PDF uploads are only for notice attachments',
-        });
+      res.status(400).json({
+        success: false,
+        code: 'VALIDATION_ERROR',
+        message: 'PDF uploads are only for notice attachments',
+      });
       return;
     }
     ok(res, getUploadProvider().sign({ tenantId: String(requireTenantId()), kind, folder }));
