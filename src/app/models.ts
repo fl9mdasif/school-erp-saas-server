@@ -11,3 +11,11 @@ export { AcademicSession } from './modules/academicSession/academicSession.model
 export { FeeHead } from './modules/feeHead/feeHead.model';
 export { GradingScale } from './modules/gradingScale/gradingScale.model';
 export { PasswordReset } from './modules/auth/passwordReset.model';
+export { ClassModel } from './modules/class/class.model';
+export { Section } from './modules/section/section.model';
+export { Subject } from './modules/subject/subject.model';
+export { ClassSubject } from './modules/classSubject/classSubject.model';
+export { Student } from './modules/student/student.model';
+export { Guardian } from './modules/guardian/guardian.model';
+export { Enrolment } from './modules/enrolment/enrolment.model';
+export { ImportJob } from './modules/studentImport/importJob.model';
