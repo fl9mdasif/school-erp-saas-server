@@ -6,7 +6,9 @@ import { logger } from './app/lib/logger';
 const main = async () => {
   await connectDb();
   const app = createApp();
-  const server = app.listen(env.PORT, () => logger.info(`server listening on :${env.PORT} (${env.NODE_ENV})`));
+  const server = app.listen(env.PORT, () =>
+    logger.info(`server listening on :${env.PORT} (${env.NODE_ENV})`),
+  );
 
   const shutdown = (signal: string) => {
     logger.info({ signal }, 'shutting down');

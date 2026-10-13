@@ -21,7 +21,10 @@ describe('health and error shape', () => {
   });
 
   it('malformed JSON returns VALIDATION_ERROR', async () => {
-    const res = await request(app).post('/api/v1/health').set('content-type', 'application/json').send('{bad');
+    const res = await request(app)
+      .post('/api/v1/health')
+      .set('content-type', 'application/json')
+      .send('{bad');
     expect(res.status).toBe(400);
     expect(res.body.code).toBe('VALIDATION_ERROR');
   });

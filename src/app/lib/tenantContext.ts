@@ -30,12 +30,19 @@ export const setContext = (patch: Partial<RequestContext>): void => {
   Object.assign(store, patch);
 };
 
-/** Run code with tenant context set explicitly (jobs, scripts, tests). */
-export const runAsTenant = <T>(tenantId: Types.ObjectId, fn: () => T, extra: Partial<RequestContext> = {}): T =>
-  storage.run({ requestId: 'internal', tenantId, ...extra }, fn);
+/** Run code with tenant context set explicitly (jobs, scripts, tests). Queries are awaited inside the context. */
+export const runAsTenant = <T>(
+  tenantId: Types.ObjectId,
+  fn: () => T,
+  extra: Partial<RequestContext> = {},
+): Promise<Awaited<T>> =>
+  storage.run({ requestId: 'internal', tenantId, ...extra }, async () => await fn()) as Promise<Awaited<T>>;
 
 /** Escape hatch. Allowed only in platform code and internal jobs (a test enforces this). */
-export const runUnscoped = <T>(fn: () => T): T => {
+export const runUnscoped = <T>(fn: () => T): Promise<Awaited<T>> => {
   const parent = storage.getStore();
-  return storage.run({ requestId: parent?.requestId ?? 'internal', ...parent, unscoped: true }, fn);
+  return storage.run(
+    { requestId: parent?.requestId ?? 'internal', ...parent, unscoped: true },
+    async () => await fn(),
+  ) as Promise<Awaited<T>>;
 };

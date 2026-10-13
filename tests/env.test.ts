@@ -9,4 +9,3 @@ describe('env loader', () => {
     process.env.JWT_ACCESS_SECRET = saved;
   });
 });
-

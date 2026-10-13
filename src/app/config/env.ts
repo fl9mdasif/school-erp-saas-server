@@ -43,7 +43,11 @@ export const env = {
   ...e,
   isProd: e.NODE_ENV === 'production',
   isTest: e.NODE_ENV === 'test',
-  corsOrigins: e.CORS_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean),
-  reservedSlugs: e.RESERVED_SLUGS.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
+  corsOrigins: e.CORS_ORIGINS.split(',')
+    .map((s) => s.trim())
+    .filter(Boolean),
+  reservedSlugs: e.RESERVED_SLUGS.split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean),
   cookieSecure: e.COOKIE_SECURE ? e.COOKIE_SECURE === 'true' : e.NODE_ENV === 'production',
 } as const;

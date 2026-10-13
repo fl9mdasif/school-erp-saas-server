@@ -57,4 +57,3 @@ export const createApp = () => {
   app.use(globalErrorHandler);
   return app;
 };
-

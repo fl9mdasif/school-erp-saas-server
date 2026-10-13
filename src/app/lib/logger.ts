@@ -19,7 +19,9 @@ export const logger = pino({
   },
   mixin() {
     const c = getContext();
-    return c ? { requestId: c.requestId, tenantId: c.tenantId?.toString(), userId: c.userId?.toString() } : {};
+    return c
+      ? { requestId: c.requestId, tenantId: c.tenantId?.toString(), userId: c.userId?.toString() }
+      : {};
   },
   transport: env.isProd || env.isTest ? undefined : { target: 'pino-pretty', options: { colorize: true } },
 });
