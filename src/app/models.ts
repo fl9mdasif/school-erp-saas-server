@@ -19,3 +19,4 @@ export { Student } from './modules/student/student.model';
 export { Guardian } from './modules/guardian/guardian.model';
 export { Enrolment } from './modules/enrolment/enrolment.model';
 export { ImportJob } from './modules/studentImport/importJob.model';
+export { AttendanceSheet } from './modules/attendance/attendance.model';

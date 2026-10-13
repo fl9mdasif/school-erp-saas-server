@@ -107,14 +107,12 @@ const summary = (p: Plan) => ({
   passOut: p.passOut.length,
   conflicts: p.conflicts,
   preview: [
-    ...p.promote
-      .slice(0, 20)
-      .map((x) => ({
-        studentId: x.student.studentId,
-        name: x.student.name,
-        action: 'promote',
-        roll: x.roll,
-      })),
+    ...p.promote.slice(0, 20).map((x) => ({
+      studentId: x.student.studentId,
+      name: x.student.name,
+      action: 'promote',
+      roll: x.roll,
+    })),
     ...p.repeat
       .slice(0, 20)
       .map((x) => ({ studentId: x.student.studentId, name: x.student.name, action: 'repeat', roll: x.roll })),
