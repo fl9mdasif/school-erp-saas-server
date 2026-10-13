@@ -8,7 +8,7 @@ Multi-tenant School Management ERP backend for schools, madrasas and coaching ce
 - API reference: [`docs/openapi.json`](docs/openapi.json) (OpenAPI 3.1, generated from the live routes)
 - Security review: [`docs/SECURITY.md`](docs/SECURITY.md)
 
-## সূচিপত্র (Table of contents)
+## Table of contents
 
 1. [Status](#1-status)
 2. [Quick start](#2-quick-start)
