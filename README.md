@@ -1,10 +1,10 @@
-# School Management SaaS: Server
+﻿# School Management SaaS: Server
 
 Multi-tenant school ERP backend. Node 22, Express 5, TypeScript, MongoDB (Mongoose), Zod.
 
 - WHAT to build: `../a-docs/school-management-prd-server.md`
 - HOW to build: `../a-docs/school-management-sop-server.md`
-- Progress: `CHECKLIST.md`, or open `../development-tracker.html` (run `npm run tracker` to refresh)
+- Progress: see `../CHECKLIST.md` and `../development-tracker.html` (project root, outside this repo)
 
 ## Setup
 1. Copy `.env.example` to `.env` and fill it in.
