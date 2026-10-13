@@ -29,3 +29,6 @@ export { FeeAdjustment } from './modules/feeAdjustment/feeAdjustment.model';
 export { Invoice, InvoiceBatch } from './modules/invoice/invoice.model';
 export { LedgerEntry } from './modules/ledger/ledgerEntry.model';
 export { Payment } from './modules/payment/payment.model';
+export { Exam } from './modules/exam/exam.model';
+export { Mark } from './modules/marks/mark.model';
+export { Result } from './modules/result/result.model';
