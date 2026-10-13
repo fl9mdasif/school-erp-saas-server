@@ -24,3 +24,5 @@ export { Notice } from './modules/notice/notice.model';
 export { PublicSite } from './modules/publicSite/publicSite.model';
 export { StaffProfile } from './modules/staffProfile/staffProfile.model';
 export { Inquiry } from './modules/inquiry/inquiry.model';
+export { FeeStructure } from './modules/feeStructure/feeStructure.model';
+export { FeeAdjustment } from './modules/feeAdjustment/feeAdjustment.model';
