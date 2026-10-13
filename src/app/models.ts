@@ -26,3 +26,5 @@ export { StaffProfile } from './modules/staffProfile/staffProfile.model';
 export { Inquiry } from './modules/inquiry/inquiry.model';
 export { FeeStructure } from './modules/feeStructure/feeStructure.model';
 export { FeeAdjustment } from './modules/feeAdjustment/feeAdjustment.model';
+export { Invoice, InvoiceBatch } from './modules/invoice/invoice.model';
+export { LedgerEntry } from './modules/ledger/ledgerEntry.model';
