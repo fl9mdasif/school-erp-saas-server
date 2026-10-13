@@ -33,6 +33,7 @@ const schema = createTenantSchema({
     results: { type: Boolean, default: true },
   },
 });
+schema.path('tenantId').index(false);
 schema.index({ tenantId: 1 }, { unique: true });
 
 export const PublicSite = mongoose.model('PublicSite', schema) as unknown as mongoose.Model<any>;
