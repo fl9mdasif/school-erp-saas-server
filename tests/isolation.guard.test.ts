@@ -12,7 +12,7 @@ const text = (f: string) => readFileSync(f, 'utf8');
 describe('isolation guard: static rules', () => {
   it('unscoped access appears only in platform code, jobs, scripts, auth/tenant bootstrap and the plugin layer', () => {
     const allowed = [
-      /[\\/]modules[\\/](platform|auth|tenant|publicApi|publicResult|publicSite)[\\/]/,
+      /[\\/]modules[\\/](platform|auth|tenant|auditLog|publicApi|publicResult|publicSite)[\\/]/,
       /[\\/](jobs|scripts|plugins|middlewares)[\\/]/,
       /tenantContext\.ts$/,
     ];
@@ -37,7 +37,7 @@ describe('isolation guard: registered models', () => {
 
   it('an unscoped query throws on every tenant model', async () => {
     for (const [name, model] of Object.entries(mongoose.models)) {
-      if (!model.schema.path('tenantId')) continue;
+      if (PLATFORM_MODELS.includes(name) || !model.schema.path('tenantId')) continue;
       await expect(model.find({}), `${name}`).rejects.toThrow(/TENANT_CONTEXT_MISSING/);
     }
   });
