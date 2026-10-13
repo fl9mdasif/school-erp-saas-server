@@ -15,9 +15,12 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "seed:admin": "tsx src/scripts/seedSuperAdmin.ts",
-    "seed:plans": "tsx src/scripts/seedPlans.ts"
+    "seed:plans": "tsx src/scripts/seedPlans.ts",
+    "docs:api": "tsx src/scripts/genOpenApi.ts",
+    "smoke": "tsx src/scripts/smokeTest.ts"
   },
   "dependencies": {
+    "@sentry/node": "^11.7.0",
     "argon2": "^0.45.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",

@@ -1,10 +1,12 @@
-﻿import { createApp } from './app';
+import { createApp } from './app';
 import { connectDb, disconnectDb } from './app/config/db';
 import { env } from './app/config/env';
 import { scheduleLedgerConsistency } from './app/jobs/ledgerConsistency';
 import { logger } from './app/lib/logger';
+import { initSentry } from './app/lib/sentry';
 
 const main = async () => {
+  initSentry();
   await connectDb();
   const app = createApp();
   scheduleLedgerConsistency();

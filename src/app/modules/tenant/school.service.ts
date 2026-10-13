@@ -1,4 +1,6 @@
-﻿import { AppError } from '../../errors/AppError';
+import { AppError } from '../../errors/AppError';
+import { clearPublicCaches } from '../../lib/publicCache';
+
 import { requireTenantId } from '../../lib/tenantContext';
 import { writeAudit } from '../auditLog/auditLog.model';
 import { Plan } from '../plan/plan.model';
@@ -35,6 +37,7 @@ export const updateProfile = async (patch: Record<string, any>) => {
     if (patch[k] !== undefined) (t as any)[k] = patch[k];
   if (patch.contact) t.contact = { ...((t.contact as any).toObject?.() ?? t.contact), ...patch.contact };
   await t.save();
+  clearPublicCaches();
   await writeAudit({
     action: 'school.profile_update',
     entityType: 'Tenant',
@@ -50,6 +53,7 @@ export const updateSettings = async (patch: Record<string, any>) => {
   const before = { ...(t.settings as any).toObject?.() };
   for (const [k, v] of Object.entries(patch)) if (v !== undefined) (t.settings as any)[k] = v;
   await t.save();
+  clearPublicCaches();
   await writeAudit({
     action: 'school.settings_update',
     entityType: 'Tenant',

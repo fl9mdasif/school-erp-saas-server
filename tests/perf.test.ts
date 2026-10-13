@@ -1,4 +1,4 @@
-﻿// Performance gates from PRD section 12. Heavy, so it only runs on request:
+// Performance gates from PRD section 12. Heavy, so it only runs on request:
 //   RUN_PERF=1 npx vitest run tests/perf.test.ts
 import { Types } from 'mongoose';
 import { describe, expect, it } from 'vitest';
@@ -6,7 +6,9 @@ import { Enrolment } from '../src/app/modules/enrolment/enrolment.model';
 import { Mark } from '../src/app/modules/marks/mark.model';
 import { Student } from '../src/app/modules/student/student.model';
 import { runAsTenant } from '../src/app/lib/tenantContext';
-import { agent, authed, registerTenant } from './helpers/api';
+import request from 'supertest';
+import { env } from '../src/app/config/env';
+import { app, agent, authed, registerTenant } from './helpers/api';
 import { setupAcademic } from './helpers/academic';
 import { useTestDb } from './helpers/db';
 
@@ -105,6 +107,9 @@ describe.skipIf(!process.env.RUN_PERF)('performance', () => {
     expect(publishMs).toBeLessThan(30_000);
 
     // public lookup: p95 under 500 ms under a burst
+    // Measure like production: one listening server and the public cache on.
+    (env as unknown as Record<string, unknown>).PUBLIC_CACHE_TTL_MS = 15_000;
+    const server = app.listen(0);
     const url = `/api/v1/public/schools/${t.slug}/results/lookup`;
     const samples: number[] = [];
     for (let batch = 0; batch < 20; batch++) {
@@ -112,7 +117,7 @@ describe.skipIf(!process.env.RUN_PERF)('performance', () => {
         Array.from({ length: 25 }, async (_, k) => {
           const i = (batch * 25 + k) % STUDENTS;
           const t0 = Date.now();
-          const res = await agent()
+          const res = await request(server)
             .post(url)
             .send({ examId: exam._id, classId: cls._id, roll: i + 1, dob: studentDocs[i].dob });
           samples.push(Date.now() - t0);
@@ -120,6 +125,7 @@ describe.skipIf(!process.env.RUN_PERF)('performance', () => {
         }),
       );
     }
+    server.close();
     samples.sort((a, b) => a - b);
     const p95 = samples[Math.floor(samples.length * 0.95)];
     console.log(`public lookup p95: ${p95} ms over ${samples.length} requests`);

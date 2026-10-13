@@ -1,5 +1,6 @@
-﻿import { AppError } from '../../errors/AppError';
+import { AppError } from '../../errors/AppError';
 import { isValidLocalDate } from '../../lib/localDate';
+import { ttlCache } from '../../lib/publicCache';
 import { requireTenantId } from '../../lib/tenantContext';
 import { ClassModel } from '../class/class.model';
 import { Exam } from '../exam/exam.model';
@@ -25,10 +26,12 @@ const examListCache = new Map<string, { at: number; data: unknown }>();
 const CACHE_MS = 30_000;
 export const clearExamListCache = () => examListCache.clear();
 
-const resultsEnabled = async () => {
-  const site = await PublicSite.findOne({}).select('sectionsVisible.results').lean();
-  return (site as any)?.sectionsVisible?.results !== false;
-};
+const enabledCache = ttlCache<boolean>();
+const resultsEnabled = () =>
+  enabledCache.getOrLoad(String(requireTenantId()), async () => {
+    const site = await PublicSite.findOne({}).select('sectionsVisible.results').lean();
+    return (site as any)?.sectionsVisible?.results !== false;
+  });
 
 /** Published exams and their class names, for the lookup form. Cached briefly because result day is read heavy. */
 export const publishedExams = async () => {
@@ -54,10 +57,12 @@ export const publishedExams = async () => {
   return data;
 };
 
-export const lookupMode = async (): Promise<LookupMode> => {
-  const t = await Tenant.findById(requireTenantId()).select('settings.resultLookupMode').lean();
-  return ((t as any)?.settings?.resultLookupMode ?? 'roll_dob') as LookupMode;
-};
+const modeCache = ttlCache<LookupMode>();
+export const lookupMode = (): Promise<LookupMode> =>
+  modeCache.getOrLoad(String(requireTenantId()), async () => {
+    const t = await Tenant.findById(requireTenantId()).select('settings.resultLookupMode').lean();
+    return ((t as any)?.settings?.resultLookupMode ?? 'roll_dob') as LookupMode;
+  });
 
 /** Finds one published result or throws the generic not-found. Never reveals which detail was wrong. */
 export const findPublishedResult = async (mode: LookupMode, input: LookupInput) => {

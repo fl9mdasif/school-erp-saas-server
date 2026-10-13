@@ -1,0 +1,3825 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "School Management API",
+    "version": "1.0.0",
+    "description": "Multi-tenant School Management API. Money is integer poisha. Dates are YYYY-MM-DD (Asia/Dhaka)."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/slug-available": {
+      "get": {
+        "summary": "GET /api/v1/slug-available",
+        "tags": [
+          "slug-available"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/register-institution": {
+      "post": {
+        "summary": "POST /api/v1/register-institution",
+        "tags": [
+          "register-institution"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "institutionName": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120
+                  },
+                  "institutionNameBn": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "institutionType": {
+                    "type": "string",
+                    "enum": [
+                      "school",
+                      "madrasa",
+                      "coaching"
+                    ]
+                  },
+                  "slug": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "district": {
+                    "type": "string",
+                    "maxLength": 60
+                  },
+                  "adminName": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "adminEmail": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "institutionName",
+                  "institutionType",
+                  "slug",
+                  "phone",
+                  "adminName",
+                  "adminEmail",
+                  "password"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "summary": "POST /api/v1/login",
+        "tags": [
+          "login"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "tenantSlug": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "identifier": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "tenantSlug",
+                  "identifier",
+                  "password"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/refresh": {
+      "post": {
+        "summary": "POST /api/v1/refresh",
+        "tags": [
+          "refresh"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public"
+      }
+    },
+    "/api/v1/logout": {
+      "post": {
+        "summary": "POST /api/v1/logout",
+        "tags": [
+          "logout"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public"
+      }
+    },
+    "/api/v1/me": {
+      "get": {
+        "summary": "GET /api/v1/me",
+        "tags": [
+          "me"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Any signed-in user"
+      }
+    },
+    "/api/v1/change-password": {
+      "post": {
+        "summary": "POST /api/v1/change-password",
+        "tags": [
+          "change-password"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Any signed-in user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "oldPassword",
+                  "newPassword"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/forgot-password": {
+      "post": {
+        "summary": "POST /api/v1/forgot-password",
+        "tags": [
+          "forgot-password"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "tenantSlug": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  }
+                },
+                "required": [
+                  "tenantSlug",
+                  "email"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reset-password": {
+      "post": {
+        "summary": "POST /api/v1/reset-password",
+        "tags": [
+          "reset-password"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "tenantSlug": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "token": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 200
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "tenantSlug",
+                  "token",
+                  "newPassword"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "POST /api/v1/auth/login",
+        "tags": [
+          "auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "description": "Public",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenants": {
+      "get": {
+        "summary": "GET /api/v1/tenants",
+        "tags": [
+          "tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "trial",
+                "active",
+                "suspended",
+                "cancelled"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "school",
+                "madrasa",
+                "coaching"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 60
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/tenants/{id}": {
+      "get": {
+        "summary": "GET /api/v1/tenants/{id}",
+        "tags": [
+          "tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/tenants/{id}/status": {
+      "patch": {
+        "summary": "PATCH /api/v1/tenants/{id}/status",
+        "tags": [
+          "tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "suspended",
+                      "cancelled"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                },
+                "required": [
+                  "status",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenants/{id}/plan": {
+      "patch": {
+        "summary": "PATCH /api/v1/tenants/{id}/plan",
+        "tags": [
+          "tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "planId": {
+                    "type": "string"
+                  },
+                  "studentCap": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100000
+                  },
+                  "extendTrialDays": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 365
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenants/{id}/slug": {
+      "patch": {
+        "summary": "PATCH /api/v1/tenants/{id}/slug",
+        "tags": [
+          "tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "slug": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                },
+                "required": [
+                  "slug",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenants/{id}/subscription-payments": {
+      "post": {
+        "summary": "POST /api/v1/tenants/{id}/subscription-payments",
+        "tags": [
+          "tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "planId": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "bkash_manual",
+                      "nagad_manual",
+                      "bank",
+                      "cash"
+                    ]
+                  },
+                  "reference": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "periodStart": {},
+                  "periodEnd": {}
+                },
+                "required": [
+                  "planId",
+                  "amount",
+                  "method",
+                  "reference",
+                  "periodStart",
+                  "periodEnd"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans": {
+      "get": {
+        "summary": "GET /api/v1/plans",
+        "tags": [
+          "plans"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only"
+      },
+      "post": {
+        "summary": "POST /api/v1/plans",
+        "tags": [
+          "plans"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 30
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 60
+                  },
+                  "priceMonthly": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "studentCap": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "features": {
+                    "type": "object",
+                    "properties": {
+                      "customDomain": {
+                        "type": "boolean"
+                      },
+                      "csvImport": {
+                        "type": "boolean"
+                      },
+                      "marksheetPdf": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "customDomain",
+                      "csvImport",
+                      "marksheetPdf"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "code",
+                  "name",
+                  "priceMonthly",
+                  "studentCap",
+                  "features"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans/{id}": {
+      "patch": {
+        "summary": "PATCH /api/v1/plans/{id}",
+        "tags": [
+          "plans"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 60
+                  },
+                  "priceMonthly": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "studentCap": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "features": {
+                    "type": "object",
+                    "properties": {
+                      "customDomain": {
+                        "type": "boolean"
+                      },
+                      "csvImport": {
+                        "type": "boolean"
+                      },
+                      "marksheetPdf": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "customDomain",
+                      "csvImport",
+                      "marksheetPdf"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stats": {
+      "get": {
+        "summary": "GET /api/v1/stats",
+        "tags": [
+          "stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only"
+      }
+    },
+    "/api/v1/": {
+      "get": {
+        "summary": "GET /api/v1/",
+        "tags": [
+          ""
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Any signed-in user",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "marks_open",
+                "marks_closed",
+                "published"
+              ]
+            }
+          },
+          {
+            "name": "sessionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "POST /api/v1/",
+        "tags": [
+          ""
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "kind": {
+                    "default": "term",
+                    "type": "string",
+                    "enum": [
+                      "term",
+                      "class_test",
+                      "model_test",
+                      "monthly",
+                      "custom"
+                    ]
+                  },
+                  "sessionId": {
+                    "type": "string"
+                  },
+                  "classIds": {
+                    "minItems": 1,
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "gradingScaleId": {
+                    "type": "string"
+                  },
+                  "startDate": {
+                    "type": "string"
+                  },
+                  "endDate": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "sessionId",
+                  "classIds"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "PATCH /api/v1/",
+        "tags": [
+          ""
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "theme": {
+                    "type": "object",
+                    "properties": {
+                      "primaryColor": {
+                        "type": "string",
+                        "pattern": "^#[0-9a-fA-F]{6}$"
+                      },
+                      "template": {
+                        "type": "string",
+                        "enum": [
+                          "classic",
+                          "modern"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "hero": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "maxLength": 150
+                      },
+                      "subtitle": {
+                        "type": "string",
+                        "maxLength": 300
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "maxLength": 500
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "about": {
+                    "type": "string",
+                    "maxLength": 5000
+                  },
+                  "mission": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "headMessage": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "designation": {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "photoUrl": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 3000
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "designation",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "admissionInfo": {
+                    "type": "object",
+                    "properties": {
+                      "isOpen": {
+                        "type": "boolean"
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "classes": {
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 40
+                        }
+                      },
+                      "lastDate": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "isOpen"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "contact": {
+                    "type": "object",
+                    "properties": {
+                      "phone": {
+                        "type": "string",
+                        "maxLength": 30
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      "address": {
+                        "type": "string",
+                        "maxLength": 300
+                      },
+                      "mapUrl": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "format": "uri"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "gallery": {
+                    "maxItems": 60,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "caption": {
+                          "type": "string",
+                          "maxLength": 150
+                        }
+                      },
+                      "required": [
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "social": {
+                    "type": "object",
+                    "properties": {
+                      "facebook": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "format": "uri"
+                      },
+                      "youtube": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "format": "uri"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "seo": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "maxLength": 70
+                      },
+                      "description": {
+                        "type": "string",
+                        "maxLength": 160
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "sectionsVisible": {
+                    "type": "object",
+                    "properties": {
+                      "about": {
+                        "type": "boolean"
+                      },
+                      "teachers": {
+                        "type": "boolean"
+                      },
+                      "notices": {
+                        "type": "boolean"
+                      },
+                      "gallery": {
+                        "type": "boolean"
+                      },
+                      "admission": {
+                        "type": "boolean"
+                      },
+                      "results": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}": {
+      "get": {
+        "summary": "GET /api/v1/{id}",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Any signed-in user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "summary": "PATCH /api/v1/{id}",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "term",
+                      "class_test",
+                      "model_test",
+                      "monthly",
+                      "custom"
+                    ]
+                  },
+                  "classIds": {
+                    "minItems": 1,
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "gradingScaleId": {
+                    "type": "string"
+                  },
+                  "startDate": {
+                    "type": "string"
+                  },
+                  "endDate": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "DELETE /api/v1/{id}",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/status": {
+      "patch": {
+        "summary": "PATCH /api/v1/{id}/status",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "draft",
+                      "marks_open",
+                      "marks_closed"
+                    ]
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/reset-password": {
+      "post": {
+        "summary": "POST /api/v1/{id}/reset-password",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/profile": {
+      "get": {
+        "summary": "GET /api/v1/profile",
+        "tags": [
+          "profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, accountant"
+      },
+      "patch": {
+        "summary": "PATCH /api/v1/profile",
+        "tags": [
+          "profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120
+                  },
+                  "nameBn": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "logoUrl": {
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "eiin": {
+                    "type": "string",
+                    "maxLength": 20
+                  },
+                  "contact": {
+                    "type": "object",
+                    "properties": {
+                      "phone": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      "address": {
+                        "type": "string",
+                        "maxLength": 300
+                      },
+                      "district": {
+                        "type": "string",
+                        "maxLength": 60
+                      },
+                      "upazila": {
+                        "type": "string",
+                        "maxLength": 60
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/settings": {
+      "patch": {
+        "summary": "PATCH /api/v1/settings",
+        "tags": [
+          "settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "locale": {
+                    "type": "string",
+                    "enum": [
+                      "bn",
+                      "en"
+                    ]
+                  },
+                  "weekendDays": {
+                    "maxItems": 3,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 6
+                    }
+                  },
+                  "defaultFeeCycle": {
+                    "type": "string",
+                    "enum": [
+                      "monthly",
+                      "term",
+                      "yearly",
+                      "one_time"
+                    ]
+                  },
+                  "attendanceEditWindowHours": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 720
+                  },
+                  "resultLookupMode": {
+                    "type": "string",
+                    "enum": [
+                      "roll_dob",
+                      "roll_only",
+                      "student_id_dob"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/usage": {
+      "get": {
+        "summary": "GET /api/v1/usage",
+        "tags": [
+          "usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin"
+      }
+    },
+    "/api/v1/template": {
+      "get": {
+        "summary": "GET /api/v1/template",
+        "tags": [
+          "template"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin"
+      }
+    },
+    "/api/v1/dry-run": {
+      "post": {
+        "summary": "POST /api/v1/dry-run",
+        "tags": [
+          "dry-run"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin"
+      }
+    },
+    "/api/v1/{jobId}/commit": {
+      "post": {
+        "summary": "POST /api/v1/{jobId}/commit",
+        "tags": [
+          "{jobId}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/enrolment": {
+      "patch": {
+        "summary": "PATCH /api/v1/{id}/enrolment",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "sectionId": {
+                    "type": "string"
+                  },
+                  "roll": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9999
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/guardians": {
+      "post": {
+        "summary": "POST /api/v1/{id}/guardians",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "relation": {
+                    "default": "other",
+                    "type": "string",
+                    "enum": [
+                      "father",
+                      "mother",
+                      "other"
+                    ]
+                  },
+                  "occupation": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "address": {
+                    "type": "string",
+                    "maxLength": 300
+                  }
+                },
+                "required": [
+                  "name",
+                  "phone"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/create-login": {
+      "post": {
+        "summary": "POST /api/v1/{id}/create-login",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "student": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "guardianIds": {
+                    "default": [],
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/students": {
+      "get": {
+        "summary": "GET /api/v1/students",
+        "tags": [
+          "students"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: student, guardian"
+      }
+    },
+    "/api/v1/sheet": {
+      "get": {
+        "summary": "GET /api/v1/sheet",
+        "tags": [
+          "sheet"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "parameters": [
+          {
+            "name": "sectionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/report/section": {
+      "get": {
+        "summary": "GET /api/v1/report/section",
+        "tags": [
+          "report"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher, accountant",
+        "parameters": [
+          {
+            "name": "sectionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/report/student/{studentId}": {
+      "get": {
+        "summary": "GET /api/v1/report/student/{studentId}",
+        "tags": [
+          "report"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher, accountant, student, guardian",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/publish": {
+      "post": {
+        "summary": "POST /api/v1/publish",
+        "tags": [
+          "publish"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin"
+      }
+    },
+    "/api/v1/unpublish": {
+      "post": {
+        "summary": "POST /api/v1/unpublish",
+        "tags": [
+          "unpublish"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin"
+      }
+    },
+    "/api/v1/sign": {
+      "post": {
+        "summary": "POST /api/v1/sign",
+        "tags": [
+          "sign"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "image",
+                      "pdf"
+                    ]
+                  },
+                  "folder": {
+                    "type": "string",
+                    "enum": [
+                      "photos",
+                      "gallery",
+                      "notices",
+                      "logo",
+                      "staff"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "folder"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/platform/plans": {
+      "get": {
+        "summary": "GET /api/v1/platform/plans",
+        "tags": [
+          "platform"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only"
+      }
+    },
+    "/api/v1/platform/find-school": {
+      "get": {
+        "summary": "GET /api/v1/platform/find-school",
+        "tags": [
+          "platform"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 60
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/notices": {
+      "get": {
+        "summary": "GET /api/v1/notices",
+        "tags": [
+          "notices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/staff": {
+      "get": {
+        "summary": "GET /api/v1/staff",
+        "tags": [
+          "staff"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only"
+      }
+    },
+    "/api/v1/inquiries": {
+      "post": {
+        "summary": "POST /api/v1/inquiries",
+        "tags": [
+          "inquiries"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "classInterest": {
+                    "type": "string",
+                    "maxLength": 60
+                  },
+                  "website": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "name",
+                  "phone"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exams": {
+      "get": {
+        "summary": "GET /api/v1/exams",
+        "tags": [
+          "exams"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only"
+      }
+    },
+    "/api/v1/lookup": {
+      "post": {
+        "summary": "POST /api/v1/lookup",
+        "tags": [
+          "lookup"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only"
+      }
+    },
+    "/api/v1/marksheet": {
+      "post": {
+        "summary": "POST /api/v1/marksheet",
+        "tags": [
+          "marksheet"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Platform owner (superAdmin) only"
+      }
+    },
+    "/api/v1/summary": {
+      "get": {
+        "summary": "GET /api/v1/summary",
+        "tags": [
+          "summary"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Any signed-in user"
+      }
+    },
+    "/api/v1/generate": {
+      "post": {
+        "summary": "POST /api/v1/generate",
+        "tags": [
+          "generate"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, accountant",
+        "parameters": [
+          {
+            "name": "dryRun",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "false",
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "sessionId": {
+                    "type": "string"
+                  },
+                  "classId": {
+                    "type": "string"
+                  },
+                  "sectionId": {
+                    "type": "string"
+                  },
+                  "studentIds": {
+                    "maxItems": 2000,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "periodLabel": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 40
+                  },
+                  "cycle": {
+                    "type": "string",
+                    "enum": [
+                      "monthly",
+                      "term",
+                      "yearly",
+                      "one_time"
+                    ]
+                  },
+                  "feeHeadIds": {
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "dueDate": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sessionId",
+                  "periodLabel",
+                  "cycle",
+                  "dueDate"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/void": {
+      "post": {
+        "summary": "POST /api/v1/{id}/void",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/receipt.pdf": {
+      "get": {
+        "summary": "GET /api/v1/{id}/receipt.pdf",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, accountant, student, guardian",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/receipt.html": {
+      "get": {
+        "summary": "GET /api/v1/{id}/receipt.html",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, accountant, student, guardian",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/reverse": {
+      "post": {
+        "summary": "POST /api/v1/{id}/reverse",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 300
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/ledger": {
+      "get": {
+        "summary": "GET /api/v1/{id}/ledger",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, accountant, student, guardian",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/fees": {
+      "get": {
+        "summary": "GET /api/v1/fees",
+        "tags": [
+          "fees"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: student, guardian"
+      }
+    },
+    "/api/v1/dues": {
+      "get": {
+        "summary": "GET /api/v1/dues",
+        "tags": [
+          "dues"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, accountant",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "classId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sectionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "periodLabel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 40
+            }
+          },
+          {
+            "name": "minAmount",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          {
+            "name": "overdueOnly",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "type": "string",
+              "enum": [
+                "json",
+                "csv"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/reports/collection": {
+      "get": {
+        "summary": "GET /api/v1/reports/collection",
+        "tags": [
+          "reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, accountant",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "day",
+              "type": "string",
+              "enum": [
+                "day",
+                "method",
+                "class",
+                "feeHead"
+              ]
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "type": "string",
+              "enum": [
+                "json",
+                "csv"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/marks-sheet": {
+      "get": {
+        "summary": "GET /api/v1/{id}/marks-sheet",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sectionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subjectId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/marks": {
+      "put": {
+        "summary": "PUT /api/v1/{id}/marks",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "classId": {
+                    "type": "string"
+                  },
+                  "sectionId": {
+                    "type": "string"
+                  },
+                  "subjectId": {
+                    "type": "string"
+                  },
+                  "marks": {
+                    "minItems": 1,
+                    "maxItems": 500,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "studentId": {
+                          "type": "string"
+                        },
+                        "components": {
+                          "minItems": 1,
+                          "maxItems": 8,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 20
+                              },
+                              "obtained": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "absent": {
+                                "default": false,
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "obtained"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "studentId",
+                        "components"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "classId",
+                  "subjectId",
+                  "marks"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/marks/submit": {
+      "post": {
+        "summary": "POST /api/v1/{id}/marks/submit",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "classId": {
+                    "type": "string"
+                  },
+                  "sectionId": {
+                    "type": "string"
+                  },
+                  "subjectId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "classId",
+                  "subjectId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/marks/unlock": {
+      "post": {
+        "summary": "POST /api/v1/{id}/marks/unlock",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "classId": {
+                    "type": "string"
+                  },
+                  "sectionId": {
+                    "type": "string"
+                  },
+                  "subjectId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "classId",
+                  "subjectId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/progress": {
+      "get": {
+        "summary": "GET /api/v1/{id}/progress",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/calculate": {
+      "post": {
+        "summary": "POST /api/v1/{id}/calculate",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/results": {
+      "get": {
+        "summary": "GET /api/v1/{id}/results",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sectionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/publish": {
+      "post": {
+        "summary": "POST /api/v1/{id}/publish",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "forceMissingAsAbsent": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/results/{studentId}/correct": {
+      "post": {
+        "summary": "POST /api/v1/{id}/results/{studentId}/correct",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 500
+                  },
+                  "changes": {
+                    "minItems": 1,
+                    "maxItems": 15,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "subjectId": {
+                          "type": "string"
+                        },
+                        "components": {
+                          "minItems": 1,
+                          "maxItems": 8,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "key": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 20
+                              },
+                              "obtained": {
+                                "anyOf": [
+                                  {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "absent": {
+                                "default": false,
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "key",
+                              "obtained"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "subjectId",
+                        "components"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "reason",
+                  "changes"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}/merit-list": {
+      "get": {
+        "summary": "GET /api/v1/{id}/merit-list",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "type": "string",
+              "enum": [
+                "json",
+                "csv"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/{id}/results/{studentId}/marksheet.pdf": {
+      "get": {
+        "summary": "GET /api/v1/{id}/results/{studentId}/marksheet.pdf",
+        "tags": [
+          "{id}"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: admin, teacher",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/results": {
+      "get": {
+        "summary": "GET /api/v1/results",
+        "tags": [
+          "results"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: student, guardian"
+      }
+    },
+    "/api/v1/results/{examId}/{studentId}/marksheet.pdf": {
+      "get": {
+        "summary": "GET /api/v1/results/{examId}/{studentId}/marksheet.pdf",
+        "tags": [
+          "results"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success: { success: true, data, meta? }"
+          },
+          "4XX": {
+            "description": "Error: { success: false, code, message, details? }"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Allowed roles: student, guardian",
+        "parameters": [
+          {
+            "name": "examId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

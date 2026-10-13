@@ -1,5 +1,7 @@
-﻿import { Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { AppError } from '../../errors/AppError';
+import { clearPublicCaches } from '../../lib/publicCache';
+
 import { escapeRegex, toSkip, type PageParams } from '../../lib/pagination';
 import { runAsTenant, runUnscoped } from '../../lib/tenantContext';
 import { writeAudit } from '../auditLog/auditLog.model';
@@ -91,6 +93,7 @@ export const setTenantStatus = async (
   t.status = input.status;
   t.suspendedAt = input.status === 'suspended' ? new Date() : undefined;
   await t.save();
+  clearPublicCaches();
   invalidateTenantStatus(t._id);
   await audit(
     t._id,
@@ -124,6 +127,7 @@ export const setTenantPlan = async (
     t.trialEndsAt = new Date(base + input.extendTrialDays * 86_400_000);
   }
   await t.save();
+  clearPublicCaches();
   invalidateTenantStatus(t._id);
   await audit(t._id, actorId, 'tenant.plan_change', {
     before,
@@ -149,6 +153,8 @@ export const changeSlug = async (
   t.slugAliases.push({ slug: old, expiresAt: new Date(Date.now() + 365 * 86_400_000) });
   t.slug = check.normalized;
   await t.save();
+  clearPublicCaches();
+  clearPublicCaches();
   await audit(t._id, actorId, 'tenant.slug_change', {
     before: { slug: old },
     after: { slug: t.slug },
@@ -170,6 +176,7 @@ export const recordSubscriptionPayment = async (id: string, actorId: Types.Objec
     t.planId = plan._id;
     t.studentCap = plan.studentCap;
     await t.save();
+    clearPublicCaches();
     invalidateTenantStatus(t._id);
   }
   await audit(t._id, actorId, 'tenant.subscription_payment', {

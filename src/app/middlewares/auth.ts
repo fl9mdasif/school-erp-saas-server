@@ -14,9 +14,8 @@ const READ_ONLY_EXEMPT = ['/api/v1/auth/change-password', '/api/v1/auth/logout',
  * Verifies the access token and sets the request context. The tenant comes ONLY from the token.
  * platform: 'deny' (tenant routes), 'allow' (shared routes such as /auth/me), 'only' (/platform routes).
  */
-export const authenticate =
-  (platform: PlatformMode = 'deny'): RequestHandler =>
-  async (req, _res, next) => {
+export const authenticate = (platform: PlatformMode = 'deny'): RequestHandler => {
+  const handler: RequestHandler = async (req, _res, next) => {
     try {
       const header = req.header('authorization');
       if (!header?.startsWith('Bearer ')) throw AppError.unauthorized();
@@ -70,14 +69,20 @@ export const authenticate =
       next(err);
     }
   };
+  // Read by the OpenAPI generator.
+  (handler as unknown as { __meta: unknown }).__meta = { auth: platform };
+  return handler;
+};
 
-export const roleGuard =
-  (...roles: Role[]): RequestHandler =>
-  (req, _res, next) => {
+export const roleGuard = (...roles: Role[]): RequestHandler => {
+  const handler: RequestHandler = (req, _res, next) => {
     if (!req.auth) return next(AppError.unauthorized());
     if (!roles.includes(req.auth.role)) return next(AppError.forbidden());
     next();
   };
+  (handler as unknown as { __meta: unknown }).__meta = { roles };
+  return handler;
+};
 
 /** Platform console routes: superAdmin only, no tenant scoping (the one place unscoped access is allowed). */
 export const platformGuard: RequestHandler[] = [

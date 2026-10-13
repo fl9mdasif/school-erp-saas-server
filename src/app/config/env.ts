@@ -1,4 +1,4 @@
-﻿import path from 'node:path';
+import path from 'node:path';
 import dotenv from 'dotenv';
 import { z } from 'zod';
 
@@ -16,7 +16,7 @@ const schema = z.object({
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
   SUPER_ADMIN_EMAIL: z.string().email().optional(),
-  SUPER_ADMIN_PASS: z.string().min(8).optional(),
+  SUPER_ADMIN_PASS: z.string().min(1).optional(),
   ADMIN_EMAIL: z.string().optional(),
 
   PLATFORM_NAME: z.string().default('xyz'),
@@ -25,13 +25,26 @@ const schema = z.object({
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
   COOKIE_SECURE: z.enum(['true', 'false']).optional(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).optional(),
+  SENTRY_DSN: z.string().url().optional(),
+  PUBLIC_CACHE_TTL_MS: z.coerce.number().int().min(0).default(15000),
   UPLOAD_PROVIDER: z.enum(['mock', 'cloudinary']).default('mock'),
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
 });
 
-const parsed = schema.safeParse(process.env);
+const parsed = schema
+  .superRefine((v, ctx) => {
+    // A weak owner password is tolerated on a developer machine only.
+    if (v.NODE_ENV === 'production' && v.SUPER_ADMIN_PASS && v.SUPER_ADMIN_PASS.length < 12) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['SUPER_ADMIN_PASS'],
+        message: 'must be at least 12 characters in production',
+      });
+    }
+  })
+  .safeParse(process.env);
 if (!parsed.success) {
   const lines = parsed.error.issues.map((i) => `  - ${i.path.join('.')}: ${i.message}`).join('\n');
   throw new Error(`Invalid environment configuration:\n${lines}`);

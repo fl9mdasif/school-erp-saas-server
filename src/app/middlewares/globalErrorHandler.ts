@@ -1,7 +1,8 @@
-﻿import type { ErrorRequestHandler } from 'express';
+import type { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
 import { AppError } from '../errors/AppError';
 import { logger } from '../lib/logger';
+import { reportError } from '../lib/sentry';
 import { env } from '../config/env';
 
 export const globalErrorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -42,7 +43,10 @@ export const globalErrorHandler: ErrorRequestHandler = (err, _req, res, _next) =
     code = 'TENANT_CONTEXT_MISSING';
   }
 
-  if (status >= 500) logger.error({ err }, 'unhandled error');
+  if (status >= 500) {
+    logger.error({ err }, 'unhandled error');
+    reportError(err);
+  }
 
   res.status(status).json({
     success: false,

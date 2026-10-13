@@ -1,4 +1,6 @@
-﻿import { AppError } from '../../errors/AppError';
+import { AppError } from '../../errors/AppError';
+import { clearPublicCaches } from '../../lib/publicCache';
+
 import { writeAudit } from '../auditLog/auditLog.model';
 import { Tenant } from '../tenant/tenant.model';
 import { requireTenantId } from '../../lib/tenantContext';
@@ -33,6 +35,7 @@ export const updateSite = async (patch: Record<string, any>) => {
     else site.set(k, v);
   }
   await site.save();
+  clearPublicCaches();
   await writeAudit({
     action: 'site.update',
     entityType: 'PublicSite',
@@ -46,6 +49,7 @@ export const setPublished = async (published: boolean) => {
   const site = await getOrCreateSite();
   site.isPublished = published;
   await site.save();
+  clearPublicCaches();
   await writeAudit({
     action: published ? 'site.publish' : 'site.unpublish',
     entityType: 'PublicSite',
