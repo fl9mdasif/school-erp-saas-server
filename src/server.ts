@@ -1,11 +1,13 @@
 ﻿import { createApp } from './app';
 import { connectDb, disconnectDb } from './app/config/db';
 import { env } from './app/config/env';
+import { scheduleLedgerConsistency } from './app/jobs/ledgerConsistency';
 import { logger } from './app/lib/logger';
 
 const main = async () => {
   await connectDb();
   const app = createApp();
+  scheduleLedgerConsistency();
   const server = app.listen(env.PORT, () =>
     logger.info(`server listening on :${env.PORT} (${env.NODE_ENV})`),
   );

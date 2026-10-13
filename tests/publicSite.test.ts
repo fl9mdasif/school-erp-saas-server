@@ -74,14 +74,12 @@ describe('public site', () => {
     const h = authed(t.token);
     await agent().post('/api/v1/site/publish').set(h);
     const url = `/api/v1/public/schools/${t.slug}/inquiries`;
-    const ok = await agent()
-      .post(url)
-      .send({
-        name: 'Parent One',
-        phone: '01711223344',
-        message: 'Seats in class 3?',
-        classInterest: 'Class 3',
-      });
+    const ok = await agent().post(url).send({
+      name: 'Parent One',
+      phone: '01711223344',
+      message: 'Seats in class 3?',
+      classInterest: 'Class 3',
+    });
     expect(ok.status).toBe(201);
     const bot = await agent()
       .post(url)
