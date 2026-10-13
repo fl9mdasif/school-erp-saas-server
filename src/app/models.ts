@@ -7,3 +7,6 @@ export { User } from './modules/user/user.model';
 export { RefreshToken } from './modules/auth/refreshToken.model';
 export { Counter } from './modules/counter/counter.model';
 export { AuditLog } from './modules/auditLog/auditLog.model';
+export { AcademicSession } from './modules/academicSession/academicSession.model';
+export { FeeHead } from './modules/feeHead/feeHead.model';
+export { GradingScale } from './modules/gradingScale/gradingScale.model';
