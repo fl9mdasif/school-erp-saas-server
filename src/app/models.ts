@@ -28,3 +28,4 @@ export { FeeStructure } from './modules/feeStructure/feeStructure.model';
 export { FeeAdjustment } from './modules/feeAdjustment/feeAdjustment.model';
 export { Invoice, InvoiceBatch } from './modules/invoice/invoice.model';
 export { LedgerEntry } from './modules/ledger/ledgerEntry.model';
+export { Payment } from './modules/payment/payment.model';

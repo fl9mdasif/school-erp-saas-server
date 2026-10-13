@@ -7,6 +7,7 @@ import { requireAuth } from '../../lib/requireAuth';
 import { ok } from '../../lib/sendResponse';
 import { authenticate, roleGuard } from '../../middlewares/auth';
 import { validateRequest } from '../../middlewares/validateRequest';
+import { voidInvoice } from '../payment/payment.service';
 import { generateInvoices, previewInvoices } from './invoice.generate';
 import * as svc from './invoice.service';
 import * as v from './invoice.validation';
@@ -49,6 +50,13 @@ router.get(
   roleGuard('admin', 'accountant', 'student', 'guardian'),
   validateRequest({ params: idParams }),
   catchAsync(async (req, res) => ok(res, await svc.getInvoice(requireAuth(req), req.params.id as string))),
+);
+
+router.post(
+  '/:id/void',
+  roleGuard('admin'),
+  validateRequest({ params: idParams, body: v.voidBody }),
+  catchAsync(async (req, res) => ok(res, await voidInvoice(req.params.id as string, req.body.reason))),
 );
 
 export const invoiceRoutes = router;

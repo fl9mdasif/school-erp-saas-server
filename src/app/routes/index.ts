@@ -23,6 +23,8 @@ import { feeAdjustmentRoutes } from '../modules/feeAdjustment/feeAdjustment.rout
 import { feeHeadRoutes } from '../modules/feeHead/feeHead.route';
 import { feeStructureRoutes } from '../modules/feeStructure/feeStructure.route';
 import { invoiceRoutes } from '../modules/invoice/invoice.route';
+import { ledgerRoutes, meFeeRoutes } from '../modules/ledger/ledger.route';
+import { paymentRoutes } from '../modules/payment/payment.route';
 import { userRoutes } from '../modules/user/user.route';
 import { platformAuthRoutes } from '../modules/platform/platform.auth.route';
 import { platformRoutes } from '../modules/platform/platform.route';
@@ -59,3 +61,6 @@ apiRouter.use('/fee-heads', feeHeadRoutes);
 apiRouter.use('/fee-structures', feeStructureRoutes);
 apiRouter.use('/fee-adjustments', feeAdjustmentRoutes);
 apiRouter.use('/invoices', invoiceRoutes);
+apiRouter.use('/payments', paymentRoutes);
+apiRouter.use('/students', ledgerRoutes);
+apiRouter.use('/me', meFeeRoutes);
