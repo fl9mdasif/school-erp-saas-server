@@ -3,7 +3,6 @@ import { createPdf, formatTaka, pdfToBuffer } from '../../lib/pdf';
 import { requireTenantId } from '../../lib/tenantContext';
 import { ClassModel } from '../class/class.model';
 import { Exam } from '../exam/exam.model';
-import { Result } from '../result/result.model';
 import { Section } from '../section/section.model';
 import { Student } from '../student/student.model';
 import { Tenant } from '../tenant/tenant.model';

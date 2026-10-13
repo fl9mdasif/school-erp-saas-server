@@ -24,7 +24,7 @@ export const resultLookupHourLimiter = rateLimit({
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   // 60 per hour per IP per school
-  keyGenerator: (req) => `\|`,
+  keyGenerator: (req) => `${ipKeyGenerator(req.ip ?? '')}|${String(req.params.slug ?? '')}`,
   message: json('RATE_LIMITED', 'Too many requests, try again later'),
 });
 export const publicLimiter = make(60_000, 120);

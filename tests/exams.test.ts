@@ -1,4 +1,6 @@
 ﻿import { describe, expect, it } from 'vitest';
+import { clearExamListCache } from '../src/app/modules/publicResult/publicResult.service';
+import { Tenant } from '../src/app/modules/tenant/tenant.model';
 import { agent, authed, login, registerTenant } from './helpers/api';
 import { banglaMarks, mathMarks, setupExam } from './helpers/exams';
 import { useTestDb } from './helpers/db';
@@ -487,14 +489,11 @@ describe('public result lookup', () => {
     const exams = `/api/v1/public/schools/${t.slug}/exams`;
     expect((await agent().get(exams)).body.data).toHaveLength(0);
     await agent().post(`/api/v1/exams/${ex.exam._id}/publish`).set(ex.h).send({});
-    const { clearExamListCache } = await import('../src/app/modules/publicResult/publicResult.service');
     clearExamListCache();
     expect((await agent().get(exams)).body.data[0]).toMatchObject({
       name: 'Half Yearly',
       classes: [{ name: 'Class 5' }],
     });
-
-    const { Tenant } = await import('../src/app/modules/tenant/tenant.model');
     await Tenant.updateOne({ _id: t.tenantId }, { $set: { status: 'suspended' } });
     const pdf = await agent()
       .post(`/api/v1/public/schools/${t.slug}/results/marksheet`)

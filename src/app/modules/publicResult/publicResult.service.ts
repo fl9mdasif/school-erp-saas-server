@@ -65,7 +65,7 @@ export const findPublishedResult = async (mode: LookupMode, input: LookupInput) 
   const exam = await Exam.findOne({ _id: input.examId, status: 'published' }).select('_id').lean();
   if (!exam) throw NOT_FOUND();
 
-  let candidates: any[] = [];
+  let candidates: any[];
   if (mode === 'student_id_dob') {
     const s = await Student.findOne({ studentId: input.studentId }).select('_id dob').lean();
     if (!s || (s as any).dob !== input.dob) throw NOT_FOUND();
