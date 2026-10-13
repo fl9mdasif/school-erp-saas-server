@@ -39,7 +39,7 @@ const applyToInvoice = async (invoiceId: Types.ObjectId | string, amount: number
       },
       { $set: { status: { $cond: [{ $eq: ['$dueAmount', 0] }, 'paid', 'partial'] } } },
     ],
-    { session, returnDocument: 'after' },
+    { session, returnDocument: 'after', updatePipeline: true },
   );
   if (!updated)
     throw AppError.conflict('An invoice no longer has enough due amount for this payment', 'OVERPAYMENT');
@@ -202,7 +202,7 @@ export const reversePayment = async (auth: Auth, id: string, reason: string) => 
             },
           },
         ],
-        { session },
+        { session, updatePipeline: true },
       );
       await LedgerEntry.create(
         [
