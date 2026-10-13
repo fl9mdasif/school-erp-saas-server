@@ -314,7 +314,16 @@ describe('results lifecycle', () => {
       .set(ex.h)
       .send({
         reason: 'Math script re-checked, marks were mis-added',
-        changes: [{ subjectId: ex.math._id, components: [{ key: 'total', obtained: 95, absent: false }] }],
+        changes: [
+          { subjectId: ex.math._id, components: [{ key: 'total', obtained: 95, absent: false }] },
+          {
+            subjectId: ex.bangla._id,
+            components: [
+              { key: 'written', obtained: 70, absent: false },
+              { key: 'mcq', obtained: 30, absent: false },
+            ],
+          },
+        ],
       });
     expect(fix.status).toBe(200);
     expect(fix.body.data).toMatchObject({ passed: true, version: 2 });
@@ -322,7 +331,9 @@ describe('results lifecycle', () => {
     const res = (await agent().get(`/api/v1/exams/${ex.exam._id}/results`).set(ex.h)).body.data;
     expect(res.exam.resultVersion).toBe(2);
     const by = (n: string) => res.results.find((r: any) => r.name === n);
-    expect(by('Chandra').positionInClass).toBeLessThan(by('Babu').positionInClass);
+    expect(by('Chandra')).toMatchObject({ gpa: 5, totalMarks: 195, positionInClass: 1 });
+    expect(by('Anik').positionInClass).toBe(2);
+    expect(by('Babu').positionInClass).toBe(3);
 
     const audit = (await agent().get('/api/v1/audit-logs').set(ex.h).query({ action: 'result.correct' })).body
       .data[0];
@@ -520,3 +531,4 @@ describe('public result lookup', () => {
     );
   });
 });
+
