@@ -12,4 +12,7 @@ const schema = createPlatformSchema({
   recordedBy: { type: Schema.Types.ObjectId, required: true },
 });
 
-export const SubscriptionPayment = mongoose.model('SubscriptionPayment', schema);
+export const SubscriptionPayment = mongoose.model(
+  'SubscriptionPayment',
+  schema,
+) as unknown as mongoose.Model<any>;

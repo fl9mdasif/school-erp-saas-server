@@ -27,4 +27,4 @@ const schema = createTenantSchema({
 });
 schema.index({ tenantId: 1, isDefault: 1 });
 
-export const GradingScale = mongoose.model('GradingScale', schema);
+export const GradingScale = mongoose.model('GradingScale', schema) as unknown as mongoose.Model<any>;

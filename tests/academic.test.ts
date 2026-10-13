@@ -86,15 +86,12 @@ describe('academic setup', () => {
       .set(h)
       .send({ sessionId: session._id, classId: cls._id, subjectId: subj._id });
     expect(dup.status).toBe(409);
-    const notTeacher = await agent()
-      .post('/api/v1/class-subjects')
-      .set(h)
-      .send({
-        sessionId: session._id,
-        classId: cls._id,
-        subjectId: subj._id,
-        teacherId: '64b000000000000000000001',
-      });
+    const notTeacher = await agent().post('/api/v1/class-subjects').set(h).send({
+      sessionId: session._id,
+      classId: cls._id,
+      subjectId: subj._id,
+      teacherId: '64b000000000000000000001',
+    });
     expect(notTeacher.status).toBe(400);
 
     // cannot delete a subject that is mapped

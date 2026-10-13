@@ -26,4 +26,4 @@ schema.index({ tenantId: 1, sectionId: 1, date: 1 }, { unique: true });
 schema.index({ tenantId: 1, date: 1 });
 schema.index({ tenantId: 1, 'records.studentId': 1, date: 1 });
 
-export const AttendanceSheet = mongoose.model('AttendanceSheet', schema);
+export const AttendanceSheet = mongoose.model('AttendanceSheet', schema) as unknown as mongoose.Model<any>;

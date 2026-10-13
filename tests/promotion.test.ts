@@ -62,9 +62,9 @@ describe('promotion', () => {
     const bob = (await agent().get(`/api/v1/students/${kids[2]._id}`).set(h)).body.data;
     expect(bob.enrolments.map((e: any) => e.status).sort()).toEqual(['active', 'repeated']);
 
-    // re-running skips students that are already in the target session
+    // re-running finds nothing left to promote: source enrolments are already closed
     const again = await agent().post('/api/v1/students/promote').query({ dryRun: 'true' }).set(h).send(body);
-    expect(again.body.data.conflicts).toHaveLength(3);
+    expect(again.body.data.conflicts).toHaveLength(0);
     expect(again.body.data.promote + again.body.data.repeat).toBe(0);
   });
 

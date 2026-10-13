@@ -17,4 +17,4 @@ schema.index(
 );
 schema.index({ tenantId: 1, order: 1 });
 
-export const ClassModel = mongoose.model('Class', schema);
+export const ClassModel = mongoose.model('Class', schema) as unknown as mongoose.Model<any>;

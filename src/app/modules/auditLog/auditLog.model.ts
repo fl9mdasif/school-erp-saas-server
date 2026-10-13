@@ -35,7 +35,7 @@ for (const op of [
   });
 }
 
-export const AuditLog = mongoose.model('AuditLog', schema);
+export const AuditLog = mongoose.model('AuditLog', schema) as unknown as mongoose.Model<any>;
 
 export interface AuditInput {
   tenantId?: Types.ObjectId;

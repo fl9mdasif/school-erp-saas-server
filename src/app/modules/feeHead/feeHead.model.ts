@@ -10,4 +10,4 @@ const schema = createTenantSchema({
 });
 schema.index({ tenantId: 1, code: 1 }, { unique: true });
 
-export const FeeHead = mongoose.model('FeeHead', schema);
+export const FeeHead = mongoose.model('FeeHead', schema) as unknown as mongoose.Model<any>;

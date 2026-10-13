@@ -18,4 +18,4 @@ schema.index({ tenantId: 1, sessionId: 1, classId: 1, sectionId: 1, roll: 1 }, {
 schema.index({ tenantId: 1, sessionId: 1, studentId: 1 }, { unique: true });
 schema.index({ tenantId: 1, sessionId: 1, classId: 1, sectionId: 1 });
 
-export const Enrolment = mongoose.model('Enrolment', schema);
+export const Enrolment = mongoose.model('Enrolment', schema) as unknown as mongoose.Model<any>;

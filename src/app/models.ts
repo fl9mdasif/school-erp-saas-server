@@ -21,3 +21,5 @@ export { Enrolment } from './modules/enrolment/enrolment.model';
 export { ImportJob } from './modules/studentImport/importJob.model';
 export { AttendanceSheet } from './modules/attendance/attendance.model';
 export { Notice } from './modules/notice/notice.model';
+export { PublicSite } from './modules/publicSite/publicSite.model';
+export { StaffProfile } from './modules/staffProfile/staffProfile.model';

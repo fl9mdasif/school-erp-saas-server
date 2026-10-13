@@ -52,7 +52,7 @@ export const getSheet = async (auth: Auth, sectionId: string, date: string) => {
   const existing = await AttendanceSheet.findOne({ sectionId: section._id, date }).lean();
   const sess = await currentSession();
   const people = await roster(section._id, sess._id);
-  const status = new Map((existing?.records ?? []).map((r) => [String(r.studentId), r]));
+  const status = new Map<string, any>((existing?.records ?? []).map((r: any) => [String(r.studentId), r]));
   return {
     exists: !!existing,
     sheetId: existing?._id,
@@ -148,12 +148,12 @@ export const editSheet = async (auth: Auth, id: string, records: Rec[]) => {
     );
   }
 
-  const before = sheet.records.map((r) => ({ studentId: r.studentId, status: r.status }));
-  const map = new Map(records.map((r) => [r.studentId, r]));
+  const before = sheet.records.map((r: any) => ({ studentId: r.studentId, status: r.status }));
+  const map = new Map(records.map((r: any) => [r.studentId, r]));
   for (const r of records)
-    if (!sheet.records.some((x) => String(x.studentId) === r.studentId))
+    if (!sheet.records.some((x: any) => String(x.studentId) === r.studentId))
       throw AppError.badRequest('A student in the list is not on this sheet', undefined, 'NOT_IN_SECTION');
-  sheet.records.forEach((r) => {
+  sheet.records.forEach((r: any) => {
     const o = map.get(String(r.studentId));
     if (o) {
       r.status = o.status;
@@ -196,7 +196,7 @@ export const sectionReport = async (auth: Auth, sectionId: string, from: string,
     for (const r of sh.records) {
       const k = String(r.studentId);
       const s = stats.get(k) ?? { present: 0, absent: 0, late: 0, leave: 0, byDate: {} };
-      s[r.status] += 1;
+      (s as any)[r.status] += 1;
       s.byDate[sh.date] = r.status;
       stats.set(k, s);
     }
@@ -252,10 +252,10 @@ export const studentReport = async (auth: Auth, studentId: string, from: string,
   const months: Record<string, { present: number; absent: number; late: number; leave: number }> = {};
   const days: { date: string; status: string }[] = [];
   for (const sh of sheets) {
-    const r = sh.records.find((x) => String(x.studentId) === String(student._id));
+    const r = sh.records.find((x: any) => String(x.studentId) === String(student._id));
     if (!r) continue;
     const m = (months[sh.date.slice(0, 7)] ??= { present: 0, absent: 0, late: 0, leave: 0 });
-    m[r.status] += 1;
+    (m as any)[r.status] += 1;
     days.push({ date: sh.date, status: r.status });
   }
   const totals = Object.values(months).reduce(

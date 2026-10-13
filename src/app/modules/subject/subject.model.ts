@@ -22,4 +22,4 @@ const schema = createTenantSchema(
 );
 schema.index({ tenantId: 1, name: 1 }, { unique: true, partialFilterExpression: { isDeleted: false } });
 
-export const Subject = mongoose.model('Subject', schema);
+export const Subject = mongoose.model('Subject', schema) as unknown as mongoose.Model<any>;

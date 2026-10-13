@@ -1,5 +1,4 @@
 ﻿import { Router, type RequestHandler } from 'express';
-import type { Model } from 'mongoose';
 import type { z } from 'zod';
 import { AppError } from '../errors/AppError';
 import { authenticate, roleGuard } from '../middlewares/auth';
@@ -15,7 +14,7 @@ import { z as zod } from 'zod';
 export interface CrudOptions {
   /** Entity label used in messages and audit actions, e.g. 'class'. */
   name: string;
-  model: Model<any>;
+  model: any;
   createBody: z.ZodType;
   updateBody: z.ZodType;
   /** Extra list filters: zod shape merged with pagination. */

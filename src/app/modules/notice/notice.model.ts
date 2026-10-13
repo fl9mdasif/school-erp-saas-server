@@ -34,4 +34,4 @@ const schema = createTenantSchema(
 schema.index({ tenantId: 1, status: 1, publishAt: -1 });
 schema.index({ tenantId: 1, isPublic: 1, status: 1, publishAt: -1 });
 
-export const Notice = mongoose.model('Notice', schema);
+export const Notice = mongoose.model('Notice', schema) as unknown as mongoose.Model<any>;

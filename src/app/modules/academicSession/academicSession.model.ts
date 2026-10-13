@@ -16,4 +16,4 @@ schema.index(
   { unique: true, partialFilterExpression: { isCurrent: true, isDeleted: false } },
 );
 
-export const AcademicSession = mongoose.model<any>('AcademicSession', schema);
+export const AcademicSession = mongoose.model('AcademicSession', schema) as unknown as mongoose.Model<any>;

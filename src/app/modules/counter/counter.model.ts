@@ -10,7 +10,7 @@ const schema = createTenantSchema(
 );
 schema.index({ tenantId: 1, key: 1 }, { unique: true });
 
-export const Counter = mongoose.model('Counter', schema);
+export const Counter = mongoose.model('Counter', schema) as unknown as mongoose.Model<any>;
 
 /** Atomic per-tenant sequence. Key examples: 'student-26', 'invoice-2026', 'receipt-2026'. */
 export const nextSeq = async (key: string, session?: ClientSession): Promise<number> => {

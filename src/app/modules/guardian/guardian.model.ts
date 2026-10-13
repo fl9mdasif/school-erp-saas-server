@@ -14,4 +14,4 @@ const schema = createTenantSchema(
 );
 schema.index({ tenantId: 1, phone: 1 }, { unique: true });
 
-export const Guardian = mongoose.model('Guardian', schema);
+export const Guardian = mongoose.model('Guardian', schema) as unknown as mongoose.Model<any>;

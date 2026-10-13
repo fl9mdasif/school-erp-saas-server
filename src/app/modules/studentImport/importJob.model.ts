@@ -13,4 +13,4 @@ const schema = createTenantSchema({
   result: { created: Number, guardiansReused: Number },
 });
 
-export const ImportJob = mongoose.model('ImportJob', schema);
+export const ImportJob = mongoose.model('ImportJob', schema) as unknown as mongoose.Model<any>;

@@ -16,4 +16,4 @@ schema.index(
   { unique: true, partialFilterExpression: { isDeleted: false } },
 );
 
-export const Section = mongoose.model('Section', schema);
+export const Section = mongoose.model('Section', schema) as unknown as mongoose.Model<any>;

@@ -23,4 +23,4 @@ schema.index(
 );
 schema.index({ tenantId: 1, teacherId: 1 });
 
-export const ClassSubject = mongoose.model('ClassSubject', schema);
+export const ClassSubject = mongoose.model('ClassSubject', schema) as unknown as mongoose.Model<any>;
