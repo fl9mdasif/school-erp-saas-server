@@ -129,3 +129,16 @@ export const getPublishedResultFor = async (auth: Auth, examId: string, studentI
   if (!r) throw AppError.notFound('Result not found');
   return r;
 };
+
+/** Every result of one student for staff screens (admin sees drafts too, marked by status). */
+export const resultsOfStudent = async (studentId: string) => {
+  const rows = await Result.find({ studentId }).sort({ createdAt: -1 }).lean();
+  const exams = new Map(
+    (
+      await Exam.find({ _id: { $in: rows.map((r: any) => r.examId) } })
+        .select('name')
+        .lean()
+    ).map((e: any) => [String(e._id), e.name]),
+  );
+  return rows.map((r: any) => ({ ...r, examName: exams.get(String(r.examId)) }));
+};

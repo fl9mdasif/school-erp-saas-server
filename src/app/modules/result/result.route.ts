@@ -69,3 +69,13 @@ me.get(
   catchAsync(async (req, res) => ok(res, await svc.myResults(requireAuth(req)))),
 );
 export const meResultRoutes = me;
+
+/** GET /students/:id/results for the admin's student profile. */
+const ofStudent = Router();
+ofStudent.use(authenticate(), roleGuard('admin'));
+ofStudent.get(
+  '/:id/results',
+  validateRequest({ params: examParams }),
+  catchAsync(async (req, res) => ok(res, await svc.resultsOfStudent(req.params.id as string))),
+);
+export const studentResultRoutes = ofStudent;
