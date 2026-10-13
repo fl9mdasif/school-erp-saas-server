@@ -8,6 +8,8 @@ import { inquiryLimiter, publicLimiter } from '../../middlewares/rateLimit';
 import { tenantResolver } from '../../middlewares/tenantResolver';
 import { validateRequest } from '../../middlewares/validateRequest';
 import * as svc from './publicApi.service';
+import { publicResultRoutes } from '../publicResult/publicResult.route';
+import { publishedExams } from '../publicResult/publicResult.service';
 
 const router = Router();
 router.use(publicLimiter);
@@ -70,6 +72,14 @@ school.post(
   validateRequest({ body: inquiryBody }),
   catchAsync(async (req, res) => ok(res, await svc.submitInquiry(req.body), undefined, 201)),
 );
+school.get(
+  '/exams',
+  catchAsync(async (_req, res) => {
+    res.setHeader('Cache-Control', 'public, max-age=30');
+    ok(res, await publishedExams());
+  }),
+);
+school.use('/results', publicResultRoutes);
 router.use('/schools/:slug', school);
 
 export const publicRoutes = router;
