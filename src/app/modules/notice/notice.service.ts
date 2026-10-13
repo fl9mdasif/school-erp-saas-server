@@ -1,5 +1,6 @@
 ﻿import { Types } from 'mongoose';
 import { AppError } from '../../errors/AppError';
+import { sanitizeRichText } from '../../lib/sanitizeHtml';
 import { toSkip, type PageParams } from '../../lib/pagination';
 import { writeAudit } from '../auditLog/auditLog.model';
 import { Enrolment } from '../enrolment/enrolment.model';
@@ -105,6 +106,7 @@ export const createNotice = async (auth: Auth, body: any) => {
   await assertTeacherMayPost(auth, body);
   const notice = await Notice.create({
     ...body,
+    body: sanitizeRichText(body.body),
     postedBy: auth.userId,
     publishAt: body.publishAt ?? new Date(),
   });
@@ -127,7 +129,7 @@ const loadOwn = async (auth: Auth, id: string) => {
 export const updateNotice = async (auth: Auth, id: string, patch: any) => {
   const n = await loadOwn(auth, id);
   await assertTeacherMayPost(auth, { ...n.toObject(), ...patch });
-  n.set(patch);
+  n.set(patch.body === undefined ? patch : { ...patch, body: sanitizeRichText(patch.body) });
   await n.save();
   await writeAudit({ action: 'notice.update', entityType: 'Notice', entityId: n._id });
   return n;
