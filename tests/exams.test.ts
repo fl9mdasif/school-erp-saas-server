@@ -531,4 +531,3 @@ describe('public result lookup', () => {
     );
   });
 });
-
