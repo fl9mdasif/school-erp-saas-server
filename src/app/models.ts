@@ -10,3 +10,4 @@ export { AuditLog } from './modules/auditLog/auditLog.model';
 export { AcademicSession } from './modules/academicSession/academicSession.model';
 export { FeeHead } from './modules/feeHead/feeHead.model';
 export { GradingScale } from './modules/gradingScale/gradingScale.model';
+export { PasswordReset } from './modules/auth/passwordReset.model';
