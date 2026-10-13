@@ -5,6 +5,7 @@ import { sessionRoutes } from '../modules/academicSession/academicSession.route'
 import { classRoutes } from '../modules/class/class.route';
 import { sectionRoutes } from '../modules/section/section.route';
 import { subjectRoutes } from '../modules/subject/subject.route';
+import { classSubjectRoutes } from '../modules/classSubject/classSubject.route';
 import { userRoutes } from '../modules/user/user.route';
 import { platformAuthRoutes } from '../modules/platform/platform.auth.route';
 import { platformRoutes } from '../modules/platform/platform.route';
@@ -22,4 +23,6 @@ apiRouter.use('/sessions', sessionRoutes);
 apiRouter.use('/classes', classRoutes);
 apiRouter.use('/sections', sectionRoutes);
 apiRouter.use('/subjects', subjectRoutes);
+
+apiRouter.use('/class-subjects', classSubjectRoutes);
 
