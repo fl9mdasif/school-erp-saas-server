@@ -13,6 +13,7 @@ export interface SignedUpload {
   provider: string;
   uploadUrl: string;
   fields: Record<string, string>;
+  cloudName?: string;
   publicUrlBase?: string;
   maxBytes: number;
   allowedMime: string[];
@@ -39,13 +40,16 @@ class MockUploadProvider implements UploadProvider {
 }
 
 /** Cloudinary signed upload parameters. The file goes browser to Cloudinary, never through this server. */
-class CloudinaryUploadProvider implements UploadProvider {
+export class CloudinaryUploadProvider implements UploadProvider {
   sign({ tenantId, kind, folder }: { tenantId: string; kind: UploadKind; folder: string }): SignedUpload {
     const { CLOUDINARY_CLOUD_NAME: cloud, CLOUDINARY_API_KEY: apiKey, CLOUDINARY_API_SECRET: secret } = env;
     if (!cloud || !apiKey || !secret)
       throw new AppError(503, 'UPLOAD_NOT_CONFIGURED', 'File uploads are not configured');
     const timestamp = Math.floor(Date.now() / 1000);
-    const params = { folder: `${tenantId}/${folder}`, timestamp };
+    // Every parameter the browser sends (except file and api_key) must be part of the signature.
+    // The folder is tenant scoped, and the format list stops a client from uploading anything but images.
+    const params: Record<string, string | number> = { folder: `${tenantId}/${folder}`, timestamp };
+    if (kind === 'image') params.allowed_formats = 'jpg,jpeg,png,webp';
     const toSign = Object.entries(params)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([k, v]) => `${k}=${v}`)
@@ -53,10 +57,14 @@ class CloudinaryUploadProvider implements UploadProvider {
     const signature = createHash('sha1')
       .update(toSign + secret)
       .digest('hex');
+    const fields: Record<string, string> = { api_key: apiKey, signature };
+    for (const [k, v] of Object.entries(params)) fields[k] = String(v);
     return {
       provider: 'cloudinary',
       uploadUrl: `https://api.cloudinary.com/v1_1/${cloud}/${kind === 'pdf' ? 'raw' : 'image'}/upload`,
-      fields: { api_key: apiKey, timestamp: String(timestamp), folder: params.folder, signature },
+      fields,
+      cloudName: cloud,
+      publicUrlBase: `https://res.cloudinary.com/${cloud}/`,
       maxBytes: LIMITS[kind].maxBytes,
       allowedMime: LIMITS[kind].mime,
       expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),

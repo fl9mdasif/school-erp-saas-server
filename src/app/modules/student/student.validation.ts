@@ -1,4 +1,5 @@
-﻿import { z } from 'zod';
+﻿import { mediaUrl } from '../../lib/mediaUrl';
+import { z } from 'zod';
 import { isValidLocalDate, todayLocal } from '../../lib/localDate';
 import { objectIdSchema } from '../../lib/objectId';
 import { paginationQuery } from '../../lib/pagination';
@@ -36,7 +37,7 @@ const profile = {
   nameBn: z.string().trim().max(120).optional(),
   gender: z.enum(['male', 'female', 'other']),
   dob: date.refine((d) => d < todayLocal(), 'Date of birth must be in the past'),
-  photoUrl: z.string().url().max(500).optional(),
+  photoUrl: mediaUrl.optional(),
   religion: z.string().trim().max(40).optional(),
   address: z.string().trim().max(300).optional(),
   birthRegistrationNo: z.string().trim().max(30).optional(),

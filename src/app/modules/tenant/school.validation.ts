@@ -1,4 +1,5 @@
-﻿import { z } from 'zod';
+﻿import { mediaUrl } from '../../lib/mediaUrl';
+import { z } from 'zod';
 import { normalizeBdPhone } from '../../lib/phone';
 
 const phone = z.string().transform((v, ctx) => {
@@ -10,7 +11,7 @@ const phone = z.string().transform((v, ctx) => {
 export const updateProfileBody = z.strictObject({
   name: z.string().trim().min(2).max(120).optional(),
   nameBn: z.string().trim().max(120).optional(),
-  logoUrl: z.string().url().max(500).optional(),
+  logoUrl: mediaUrl.optional(),
   eiin: z.string().trim().max(20).optional(),
   contact: z
     .strictObject({

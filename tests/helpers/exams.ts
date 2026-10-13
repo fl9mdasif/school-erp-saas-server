@@ -42,26 +42,20 @@ export const setupExam = async (t: TestTenant) => {
       .set(h)
       .send({ role: 'teacher', name: 'Math Sir', email: 'mt@example.com', password: 'Teacher#12345' })
   ).body.data.user;
-  await agent()
-    .post('/api/v1/class-subjects')
-    .set(h)
-    .send({
-      sessionId: a.session._id,
-      classId: a.cls._id,
-      subjectId: bangla._id,
-      teacherId: tBangla.id,
-      order: 1,
-    });
-  await agent()
-    .post('/api/v1/class-subjects')
-    .set(h)
-    .send({
-      sessionId: a.session._id,
-      classId: a.cls._id,
-      subjectId: math._id,
-      teacherId: tMath.id,
-      order: 2,
-    });
+  await agent().post('/api/v1/class-subjects').set(h).send({
+    sessionId: a.session._id,
+    classId: a.cls._id,
+    subjectId: bangla._id,
+    teacherId: tBangla.id,
+    order: 1,
+  });
+  await agent().post('/api/v1/class-subjects').set(h).send({
+    sessionId: a.session._id,
+    classId: a.cls._id,
+    subjectId: math._id,
+    teacherId: tMath.id,
+    order: 2,
+  });
   const exam = (
     await agent()
       .post('/api/v1/exams')

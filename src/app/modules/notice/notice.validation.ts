@@ -1,4 +1,5 @@
-﻿import { z } from 'zod';
+﻿import { mediaUrl } from '../../lib/mediaUrl';
+import { z } from 'zod';
 import { objectIdSchema } from '../../lib/objectId';
 import { paginationQuery } from '../../lib/pagination';
 
@@ -18,7 +19,7 @@ const audience = z
   });
 
 const attachment = z.strictObject({
-  url: z.string().url().max(500),
+  url: mediaUrl,
   name: z.string().trim().min(1).max(120),
 });
 

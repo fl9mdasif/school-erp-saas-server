@@ -1,7 +1,8 @@
-﻿import { z } from 'zod';
+﻿import { mediaUrl } from '../../lib/mediaUrl';
+import { z } from 'zod';
 import { isValidLocalDate } from '../../lib/localDate';
 
-const url = z.string().url().max(500);
+const url = mediaUrl;
 const color = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use a hex colour like #1d4ed8');
 
 export const updateSiteBody = z.strictObject({
@@ -38,14 +39,19 @@ export const updateSiteBody = z.strictObject({
       phone: z.string().trim().max(30).optional(),
       email: z.string().email().optional(),
       address: z.string().trim().max(300).optional(),
-      mapUrl: url.optional(),
+      mapUrl: z.string().url().max(500).optional(),
     })
     .optional(),
   gallery: z
     .array(z.strictObject({ url, caption: z.string().trim().max(150).optional() }))
     .max(60)
     .optional(),
-  social: z.strictObject({ facebook: url.optional(), youtube: url.optional() }).optional(),
+  social: z
+    .strictObject({
+      facebook: z.string().url().max(300).optional(),
+      youtube: z.string().url().max(300).optional(),
+    })
+    .optional(),
   seo: z
     .strictObject({
       title: z.string().trim().max(70).optional(),
