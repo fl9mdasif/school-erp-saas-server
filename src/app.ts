@@ -53,6 +53,10 @@ export const createApp = () => {
   app.use('/api/v1', healthRoutes);
   app.use('/api/v1', apiRouter);
 
+  app.get('/', (req, res) => {
+    res.json({ message: 'School Management API Running' });
+  })
+
   app.use(notFound);
   app.use(globalErrorHandler);
   return app;
