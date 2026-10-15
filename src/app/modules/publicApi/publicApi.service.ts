@@ -18,7 +18,7 @@ const publishedSite = async () => {
 export const getSite = async () => {
   const site = await publishedSite();
   const tenant = await Tenant.findById(requireTenantId())
-    .select('name nameBn slug institutionType logoUrl contact.district contact.upazila')
+    .select('name nameBn slug institutionType logoUrl contact.district contact.upazila settings.resultLookupMode')
     .lean();
   const v = site.sectionsVisible ?? {};
   return {
@@ -42,6 +42,7 @@ export const getSite = async () => {
     social: site.social,
     seo: site.seo,
     sectionsVisible: site.sectionsVisible,
+    resultLookupMode: (tenant as any)?.settings?.resultLookupMode ?? 'roll_dob',
   };
 };
 
