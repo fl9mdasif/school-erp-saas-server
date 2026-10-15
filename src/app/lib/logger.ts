@@ -23,5 +23,6 @@ export const logger = pino({
       ? { requestId: c.requestId, tenantId: c.tenantId?.toString(), userId: c.userId?.toString() }
       : {};
   },
-  transport: env.isProd || env.isTest ? undefined : { target: 'pino-pretty', options: { colorize: true } },
+  // pino-pretty is a dev dependency, so serverless hosts never have it.
+  transport: env.isProd || env.isTest || process.env.VERCEL ? undefined : { target: 'pino-pretty', options: { colorize: true } },
 });

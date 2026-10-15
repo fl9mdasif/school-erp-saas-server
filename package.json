@@ -39,6 +39,9 @@
     "sanitize-html": "^2.18.0",
     "zod": "^4.6.7"
   },
+  "overrides": {
+    "htmlparser2": "^10.0.0"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/cookie-parser": "^1.4.10",
