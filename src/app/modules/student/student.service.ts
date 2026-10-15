@@ -137,7 +137,21 @@ export const listStudents = async (
   if (f.status) filter.status = f.status;
   if (f.q) {
     const re = new RegExp(escapeRegex(f.q), 'i');
-    filter.$or = [{ name: re }, { studentId: re }, { admissionNo: re }];
+    const or: Record<string, any>[] = [{ name: re }, { studentId: re }, { admissionNo: re }];
+    // A guardian's phone, so the accountant can find a student by who is paying.
+    const guardianIds = await Guardian.find({ phone: re }).distinct('_id');
+    if (guardianIds.length) or.push({ guardianIds: { $in: guardianIds } });
+    // A roll number, so the accountant can find a student by roll in the current session.
+    if (/^\d{1,3}$/.test(f.q)) {
+      const sess = await currentSession().catch(() => null);
+      if (sess) {
+        const ids = await Enrolment.find({ sessionId: sess._id, roll: Number(f.q), status: 'active' }).distinct(
+          'studentId',
+        );
+        if (ids.length) or.push({ _id: { $in: ids } });
+      }
+    }
+    filter.$or = or;
   }
   if (scope.kind === 'own') filter._id = { $in: scope.studentIds };
 
