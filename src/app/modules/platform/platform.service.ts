@@ -185,11 +185,11 @@ export const recordSubscriptionPayment = async (id: string, actorId: Types.Objec
   return row;
 };
 
-export const listPlans = () => Plan.find({}).sort({ priceMonthly: 1 }).lean();
+export const listPlans = () => Plan.find({}).sort({ monthlyPrice: 1 }).lean();
 
 export const createPlan = async (input: any) => {
-  if (await Plan.exists({ code: input.code }))
-    throw AppError.conflict('A plan with this code already exists', 'DUPLICATE');
+  if (await Plan.exists({ slug: input.slug }))
+    throw AppError.conflict('A plan with this slug already exists', 'DUPLICATE');
   return Plan.create(input);
 };
 

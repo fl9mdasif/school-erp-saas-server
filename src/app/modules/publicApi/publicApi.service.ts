@@ -96,8 +96,8 @@ export const submitInquiry = async (input: {
 
 export const publicPlans = () =>
   Plan.find({ isActive: true })
-    .select('code name priceMonthly studentCap features')
-    .sort({ priceMonthly: 1 })
+    .select('slug name monthlyPrice yearlyPrice yearlyDiscount trialDays isPopular features notIncluded')
+    .sort({ monthlyPrice: 1 })
     .lean();
 
 export const findSchools = async (q: string) => {

@@ -1,14 +1,17 @@
 ﻿import type { Types } from 'mongoose';
-import type { Money } from '../../lib/money';
 
 export interface IPlan {
   _id: Types.ObjectId;
-  code: string;
+  slug: string;
   name: string;
-  priceMonthly: Money;
-  studentCap: number;
-  features: { customDomain: boolean; csvImport: boolean; marksheetPdf: boolean };
+  monthlyPrice: number;
+  yearlyPrice: number;
+  yearlyDiscount?: number;
+  trialDays?: number;
   isActive: boolean;
+  isPopular: boolean;
+  features: string[];
+  notIncluded: string[];
   createdAt: Date;
   updatedAt: Date;
 }

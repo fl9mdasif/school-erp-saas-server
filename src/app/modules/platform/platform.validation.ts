@@ -36,18 +36,16 @@ export const subscriptionPaymentBody = z.strictObject({
   periodEnd: z.coerce.date(),
 });
 
-const planFeatures = z.strictObject({
-  customDomain: z.boolean(),
-  csvImport: z.boolean(),
-  marksheetPdf: z.boolean(),
-});
-
 export const createPlanBody = z.strictObject({
-  code: z.string().trim().toLowerCase().min(2).max(30),
+  slug: z.string().trim().toLowerCase().min(2).max(30),
   name: z.string().trim().min(2).max(60),
-  priceMonthly: z.number().int().min(0),
-  studentCap: z.number().int().min(1),
-  features: planFeatures,
+  monthlyPrice: z.number().int().min(0),
+  yearlyPrice: z.number().int().min(0),
+  yearlyDiscount: z.number().int().min(0).optional(),
+  trialDays: z.number().int().min(0).optional(),
   isActive: z.boolean().optional(),
+  isPopular: z.boolean().optional(),
+  features: z.array(z.string().trim().min(1)).min(1),
+  notIncluded: z.array(z.string().trim().min(1)).optional(),
 });
-export const updatePlanBody = createPlanBody.partial().omit({ code: true });
+export const updatePlanBody = createPlanBody.partial().omit({ slug: true });

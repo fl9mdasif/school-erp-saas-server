@@ -4,7 +4,7 @@ import { seedPlans } from '../app/modules/plan/plan.seed';
 const run = async () => {
   await connectDb();
   const plans = await seedPlans();
-  console.log(`plans ready: ${plans.map((p) => p.code).join(', ')}`);
+  console.log(`plans ready: ${plans.map((p) => p.slug).join(', ')}`);
   await disconnectDb();
 };
 
